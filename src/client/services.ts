@@ -10,6 +10,10 @@ import type {
   ItemsPublic,
   Message,
   NewPassword,
+  TaskCreate,
+  TaskPublic,
+  TaskUpdate,
+  TasksPublic,
   Token,
   UpdatePassword,
   UserCreate,
@@ -506,6 +510,134 @@ export class ItemsService {
     return __request(OpenAPI, {
       method: "DELETE",
       url: "/api/v1/items/{id}",
+      path: {
+        id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export type TDataReadTasks = {
+  limit?: number
+  skip?: number
+}
+export type TDataCreateTask = {
+  requestBody: TaskCreate
+}
+export type TDataReadTask = {
+  id: string
+}
+export type TDataUpdateTask = {
+  id: string
+  requestBody: TaskUpdate
+}
+export type TDataDeleteTask = {
+  id: string
+}
+
+export class TasksService {
+  /**
+   * Read Items
+   * Retrieve items.
+   * @returns TasksPublic Successful Response
+   * @throws ApiError
+   */
+  public static readTasks(
+    data: TDataReadTasks = {},
+  ): CancelablePromise<TasksPublic> {
+    const { limit = 100, skip = 0 } = data
+    return __request(OpenAPI, {
+      method: "GET",
+      url: ":8000/api/harmonise/task/",
+      query: {
+        skip,
+        limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Create Task
+   * Create new item.
+   * @returns TaskPublic Successful Response
+   * @throws ApiError
+   */
+  public static createTask(
+    data: TDataCreateTask,
+  ): CancelablePromise<TaskPublic> {
+    const { requestBody } = data
+    return __request(OpenAPI, {
+      method: "POST",
+      url: ":8000/api/harmonise/task/",
+      body: requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Task
+   * Get item by ID.
+   * @returns TaskPublic Successful Response
+   * @throws ApiError
+   */
+  public static readTask(data: TDataReadTask): CancelablePromise<TaskPublic> {
+    const { id } = data
+    return __request(OpenAPI, {
+      method: "GET",
+      url: ":8000/api/harmonise/task/{id}",
+      path: {
+        id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Update Task
+   * Update an item.
+   * @returns TaskPublic Successful Response
+   * @throws ApiError
+   */
+  public static updateTask(
+    data: TDataUpdateTask,
+  ): CancelablePromise<TaskPublic> {
+    const { id, requestBody } = data
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: ":8000/api/harmonise/task/{id}",
+      path: {
+        id,
+      },
+      body: requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Delete Task
+   * Delete an item.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static deleteTask(data: TDataDeleteTask): CancelablePromise<Message> {
+    const { id } = data
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: ":8000/api/harmonise/task/{id}",
       path: {
         id,
       },

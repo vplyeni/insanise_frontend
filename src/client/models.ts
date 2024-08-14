@@ -69,6 +69,7 @@ export type UserPublic = {
   company: number | null;
   target_group: number | null;
   team: number | null;
+  is_superuser: boolean
 };
 
 export type UserRegister = {
@@ -99,4 +100,39 @@ export type ValidationError = {
   loc: Array<string | number>
   msg: string
   type: string
+}
+
+export type TaskField = {
+  id: string;
+  type: string;
+  name: string;
+  content: string;
+};
+
+export type TaskBase = {
+  name: string;
+  description: string;
+  fields: TaskField[];
+  created_date?: string | null;
+  updated_date?: string | null;
+  created_by?: string | null;
+  updated_by?: string | null;
+  company_id: string;
+};
+
+export type TaskCreate = TaskBase & {
+  user_ids: string[];
+};
+
+export type TaskPublic = TaskBase & {
+  _id: string;
+};
+
+export type TaskUpdate = TaskCreate & {
+  _id: string;
+};
+
+export type TasksPublic = {
+  data: Array<TaskPublic>
+  count: number
 }
