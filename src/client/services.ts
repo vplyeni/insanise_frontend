@@ -27,6 +27,12 @@ import type {
 export type TDataLoginAccessToken = {
   formData: Body_login_login_access_token
 }
+export type TDataLoginRefreshToken = {
+  refresh: string
+}
+export type TDataLoginRefreshAccessToken = {
+  access: string
+}
 export type TDataRecoverPassword = {
   email: string
 }
@@ -52,6 +58,20 @@ export class LoginService {
       method: "POST",
       url: ":8000/api/auth/token/",
       formData: formData,
+      mediaType: "application/x-www-form-urlencoded",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  public static loginAccessRefresh(
+    data: TDataLoginRefreshToken,
+  ): CancelablePromise<TDataLoginRefreshAccessToken> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: ":8000/api/auth/token/refresh/",
+      formData: data,
       mediaType: "application/x-www-form-urlencoded",
       errors: {
         422: "Validation Error",

@@ -19,7 +19,7 @@ import { z } from "zod"
 
 import { TasksService } from "../../client"
 import ActionsMenu from "../../components/Common/ActionsMenu"
-import Navbar from "../../components/Common/Navbar"
+//import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
 const TasksSearchSchema = z.object({

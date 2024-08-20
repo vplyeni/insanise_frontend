@@ -7,6 +7,8 @@ import {
   type Body_login_login_access_token as AccessToken,
   type ApiError,
   LoginService,
+  TDataLoginRefreshAccessToken,
+  TDataLoginRefreshToken,
   type UserPublic,
   type UserRegister,
   UsersService,
@@ -16,7 +18,9 @@ import useCustomToast from "./useCustomToast"
 const isLoggedIn = () => {
   return localStorage.getItem("access_token") !== null
 }
+const handleRefresh= () => {
 
+}
 const useAuth = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
@@ -24,7 +28,25 @@ const useAuth = () => {
   const queryClient = useQueryClient()
   const { data: user, isLoading } = useQuery<UserPublic | null, Error>({
     queryKey: ["currentUser"],
-    queryFn: UsersService.readUserMe,
+    queryFn: async () => {
+      const result : UserPublic = await UsersService.readUserMe().catch(async () => {
+        if(localStorage.getItem("refresh_token") !== null){
+          const { access }= await LoginService.loginAccessRefresh(
+            { 
+              "refresh": localStorage.getItem("refresh_token") 
+            } as TDataLoginRefreshToken).catch(()=>{
+              logout()
+              return {} as TDataLoginRefreshAccessToken
+            })
+          localStorage.setItem("access_token",access)
+        }else{
+          logout()
+        }
+        
+        return {} as UserPublic
+      })
+      return result
+    },
     enabled: isLoggedIn(),
   })
 
@@ -59,6 +81,7 @@ const useAuth = () => {
       formData: data,
     })
     localStorage.setItem("access_token", response.access)
+    localStorage.setItem("refresh_token", response.refresh)
   }
 
   const loginMutation = useMutation({
