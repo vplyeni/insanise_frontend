@@ -22,13 +22,13 @@ import ActionsMenu from "../../components/Common/ActionsMenu"
 //import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
-const TasksSearchSchema = z.object({
+const MyTasksSearchSchema = z.object({
   page: z.number().catch(1),
 })
 
-export const Route = createFileRoute("/_layout/tasks")({
-  component: Tasks,
-  validateSearch: (search) => TasksSearchSchema.parse(search),
+export const Route = createFileRoute("/_layout/my_tasks")({
+  component: MyTasks,
+  validateSearch: (search) => MyTasksSearchSchema.parse(search),
 })
 
 const PER_PAGE = 5
@@ -36,12 +36,12 @@ const PER_PAGE = 5
 function getTasksQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      TasksService.readAllTasks({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      TasksService.readTasks({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
     queryKey: ["Tasks", { page }],
   }
 }
 
-function TasksTable() {
+function MyTasksTable() {
   const queryClient = useQueryClient()
   const { page } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
@@ -75,6 +75,7 @@ function TasksTable() {
               <Th>Name</Th>
               <Th>Description</Th>
               <Th>Status</Th>
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -104,6 +105,9 @@ function TasksTable() {
                   <Td>
                     {Task.status}
                   </Td>
+                  <Td>
+                    <ActionsMenu type={"MyTasks"} value={Task} />
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
@@ -129,14 +133,14 @@ function TasksTable() {
   )
 }
 
-function Tasks() {
+function MyTasks() {
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
-        Tasks Management
+        My Tasks
       </Heading>
 
-      <TasksTable />
+      <MyTasksTable />
     </Container>
   )
 }

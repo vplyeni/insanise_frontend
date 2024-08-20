@@ -70,6 +70,7 @@ export type UserPublic = {
   target_group: number | null;
   team: number | null;
   is_superuser: boolean
+  is_manager: boolean
 };
 
 export type UserRegister = {

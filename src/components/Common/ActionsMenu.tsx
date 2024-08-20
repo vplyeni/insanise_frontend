@@ -24,6 +24,8 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const editUserModal = useDisclosure()
   const deleteModal = useDisclosure()
 
+  console.log(type);
+  
   return (
     <>
       <Menu>
@@ -38,8 +40,10 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             onClick={editUserModal.onOpen}
             icon={<FiEdit fontSize="16px" />}
           >
-            Edit {type}
+            {type == "MyTasks" ? "Answer Your Task" : <>Edit {type}</>}
           </MenuItem>
+          {
+          type !== "MyTasks" &&
           <MenuItem
             onClick={deleteModal.onOpen}
             icon={<FiTrash fontSize="16px" />}
@@ -47,6 +51,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
           >
             Delete {type}
           </MenuItem>
+        }
         </MenuList>
         {type === "User" ? (
           <EditUser
@@ -61,12 +66,16 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             onClose={editUserModal.onClose}
           />
         )}
-        <Delete
+        {
+          type !== "MyTasks" &&
+          <Delete
           type={type}
           id={value.id+""}
           isOpen={deleteModal.isOpen}
           onClose={deleteModal.onClose}
         />
+        }
+
       </Menu>
     </>
   )

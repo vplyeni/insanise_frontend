@@ -583,6 +583,29 @@ export class TasksService {
   }
 
   /**
+   * Read Items
+   * Retrieve items.
+   * @returns TasksPublic Successful Response
+   * @throws ApiError
+   */
+  public static readAllTasks(
+    data: TDataReadTasks = {},
+  ): CancelablePromise<TasksPublic> {
+    const { limit = 100, skip = 0 } = data
+    return __request(OpenAPI, {
+      method: "GET",
+      url: ":8000/api/harmonise/task_all/",
+      query: {
+        skip,
+        limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
    * Create Task
    * Create new item.
    * @returns TaskPublic Successful Response

@@ -18,9 +18,6 @@ import useCustomToast from "./useCustomToast"
 const isLoggedIn = () => {
   return localStorage.getItem("access_token") !== null
 }
-const handleRefresh= () => {
-
-}
 const useAuth = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()

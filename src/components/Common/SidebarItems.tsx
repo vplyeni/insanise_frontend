@@ -7,8 +7,7 @@ import type { UserPublic } from "../../client"
 
 const items = [
   { icon: FiHome, title: "Dashboard", path: "/" },
-  { icon: FiBriefcase, title: "Tasks", path: "/tasks" },
-  { icon: FiSettings, title: "User Settings", path: "/settings" },
+  { icon: FiBriefcase, title: "My Tasks", path: "/my_tasks" },
   
 ]
 
@@ -22,10 +21,17 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
   const bgActive = useColorModeValue("#E2E8F0", "#4A5568")
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"])
 
-  const finalItems = currentUser?.is_superuser
-    ? [...items, { icon: FiUsers, title: "Admin", path: "/admin" }]
+  console.log(currentUser);
+  
+  let finalItems = currentUser?.is_manager
+    ? [...items, { icon: FiBriefcase, title: "Task Management", path: "/tasks" }]
     : items
-
+  /*
+  finalItems = currentUser?.is_superuser 
+    ? [...finalItems, { icon: FiUsers, title: "Admin", path: "/admin" }]
+    : finalItems
+  */
+  finalItems = [...finalItems, { icon: FiSettings, title: "User Settings", path: "/settings" }]
   const listItems = finalItems.map(({ icon, title, path }) => (
     <Flex
       as={Link}
