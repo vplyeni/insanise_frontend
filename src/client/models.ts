@@ -111,6 +111,7 @@ export type TaskField = {
 };
 
 export type TaskBase = {
+  id: string;
   name: string;
   description: string;
   fields: TaskField[];
@@ -121,17 +122,12 @@ export type TaskBase = {
   company_id: string;
 };
 
-export type TaskCreate = TaskBase & {
-  user_ids: string[];
-};
+export type TaskCreate = TaskBase
 
-export type TaskPublic = TaskBase & {
-  _id: string;
-};
+export type TaskPublic = TaskBase
 
-export type TaskUpdate = TaskCreate & {
-  _id: string;
-};
+
+export type TaskUpdate = TaskCreate
 
 export type TasksPublic = {
   data: Array<TaskPublic>

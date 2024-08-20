@@ -9,10 +9,11 @@ import {
 import { BsThreeDotsVertical } from "react-icons/bs"
 import { FiEdit, FiTrash } from "react-icons/fi"
 
-import type { ItemPublic, UserPublic } from "../../client"
+import type { ItemPublic, TaskPublic, UserPublic } from "../../client"
 import EditUser from "../Admin/EditUser"
 import EditItem from "../Items/EditItem"
 import Delete from "./DeleteAlert"
+import AnswerMyTask from "../MyTasks/AnswerMyTask"
 
 interface ActionsMenuProps {
   type: string
@@ -59,7 +60,13 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />
-        ) : (
+        ) : type === "MyTasks" ? (
+        <AnswerMyTask
+          item={value as TaskPublic}
+          isOpen={editUserModal.isOpen}
+          onClose={editUserModal.onClose}
+        />
+        ) :(
           <EditItem
             item={value as ItemPublic}
             isOpen={editUserModal.isOpen}
