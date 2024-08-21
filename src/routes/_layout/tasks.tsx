@@ -19,6 +19,7 @@ import { z } from "zod"
 
 import { TasksService } from "../../client"
 import ActionsMenu from "../../components/Common/ActionsMenu"
+import Navbar from "../../components/Common/Navbar"
 //import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
@@ -67,7 +68,8 @@ function TasksTable() {
   }, [page, queryClient, hasNextPage])
 
   return (
-    <>
+    <>  
+    <Navbar type={"Task"} addModalAs={"symbol"} />
       <TableContainer>
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>

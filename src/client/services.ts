@@ -561,6 +561,12 @@ export type TDataDeleteTask = {
   id: string
 }
 
+export type TDataFieldCustomize = {
+  content: string,
+  task_id: string,
+  field_id:string
+}
+
 export type TDataFileForField = {
   task_id: string,
   field_id: string,
@@ -699,7 +705,12 @@ export class TasksService {
       },
     })
   }
-  
+    /**
+   * Delete Task
+   * Delete an item.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
   public static addFileToField(data:TDataFileForField): CancelablePromise<Message> {
     const {task_id, field_id, file} = data
     return __request(OpenAPI, {
@@ -711,6 +722,23 @@ export class TasksService {
       formData:{
         'file': file
       }
+    })
+  }
+
+    /**
+   * Delete Task
+   * Delete an item.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static customizeFieldWithTaskId(data:TDataFieldCustomize): CancelablePromise<Message> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: ":8000/api/harmonise/field_files/",
+      errors: {
+        422: "Validation Error",
+      },
+      body: data
     })
   }
 }

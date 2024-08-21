@@ -1,4 +1,4 @@
-import { Box, Card, Flex, FormControl, FormLabel, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react"
+import { Box, Card, Flex, FormControl, FormLabel, Input, InputGroup, InputRightElement, Text, Textarea } from "@chakra-ui/react"
 import { TaskField, TasksService, TDataFileForField } from "../../client"
 import { useState } from "react"
 
@@ -7,11 +7,13 @@ import { useState } from "react"
 interface FieldAnswer {
     task_id: string,
     field: TaskField,
-    index: number
+    index: number,
+    textareas: any,
+    setTextareas: any,
 }
 
 
-const FieldAnswer = ({ task_id,field,index }: FieldAnswer) => {
+const FieldAnswer = ({ task_id,field,index, textareas, setTextareas }: FieldAnswer) => {
     const [name, setName] = useState(field.represented_name)
 
     return (
@@ -20,9 +22,36 @@ const FieldAnswer = ({ task_id,field,index }: FieldAnswer) => {
             field.type == "plain_text" ?
             <Input
             placeholder={field.name}
+            defaultValue={field.content}
+            onChange={(event)=>{
+                const text = event.target.value
+                textareas[field.id] = text
+                console.log(text);
+                
+                setTextareas(textareas)
+            }}
             />
             :
-            
+            (
+            field.type == "long_text" ?
+            <>
+            <Textarea
+            placeholder={field.name}
+            defaultValue={field.content}
+            onChange={(event)=>{
+                const text = event.target.value
+                textareas[field.id] = text
+                console.log(text);
+
+                setTextareas(textareas)
+
+            }}
+            style={{
+                minHeight:"120px"
+            }}
+            />
+            </>
+            :
             <Card
                 marginTop={"10px"}
                 paddingTop={"6px"}
@@ -30,7 +59,7 @@ const FieldAnswer = ({ task_id,field,index }: FieldAnswer) => {
                 defaultValue={field.name}
                 minHeight={"100px"}
                 borderColor={"#A0AEC0"}
-                _hover={{ borderColor: "#f37024" }}
+                style={field.represented_name===""?{}:{ backgroundColor: "#f3702420" }}
             >
                 <FormLabel marginTop={"10px"} marginLeft={"20px"} fontSize="sm" color="gray.500">
                     {field.name}
@@ -53,7 +82,6 @@ const FieldAnswer = ({ task_id,field,index }: FieldAnswer) => {
                                 .then((res:any)=>{
                                     field.content = res.name
                                     field.represented_name = res.represent_name
-
                                     setName(res.represent_name)
                                 })
                             }
@@ -74,6 +102,7 @@ const FieldAnswer = ({ task_id,field,index }: FieldAnswer) => {
 
                 
             </Card>
+            )
         }
     </div>
     )
