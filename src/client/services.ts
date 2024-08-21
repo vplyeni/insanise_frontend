@@ -13,6 +13,8 @@ import type {
   TaskCreate,
   TaskPublic,
   TaskUpdate,
+  TaskUserPublic,
+  TaskUsersPublic,
   TasksPublic,
   Token,
   UpdatePassword,
@@ -553,7 +555,7 @@ export type TDataReadTask = {
 }
 export type TDataUpdateTask = {
   id: string
-  requestBody: TaskUpdate
+  requestBody: TaskUserPublic
 }
 export type TDataDeleteTask = {
   id: string
@@ -574,7 +576,7 @@ export class TasksService {
    */
   public static readTasks(
     data: TDataReadTasks = {},
-  ): CancelablePromise<TasksPublic> {
+  ): CancelablePromise<TaskUsersPublic> {
     const { limit = 100, skip = 0 } = data
     return __request(OpenAPI, {
       method: "GET",
@@ -620,7 +622,7 @@ export class TasksService {
    */
   public static createTask(
     data: TDataCreateTask,
-  ): CancelablePromise<TaskPublic> {
+  ): CancelablePromise<TaskUpdate> {
     const { requestBody } = data
     return __request(OpenAPI, {
       method: "POST",
@@ -636,10 +638,10 @@ export class TasksService {
   /**
    * Read Task
    * Get item by ID.
-   * @returns TaskPublic Successful Response
+   * @returns TaskUpdate Successful Response
    * @throws ApiError
    */
-  public static readTask(data: TDataReadTask): CancelablePromise<TaskPublic> {
+  public static readTask(data: TDataReadTask): CancelablePromise<TaskUpdate> {
     const { id } = data
     return __request(OpenAPI, {
       method: "GET",
@@ -656,12 +658,12 @@ export class TasksService {
   /**
    * Update Task
    * Update an item.
-   * @returns TaskPublic Successful Response
+   * @returns TaskUpdate Successful Response
    * @throws ApiError
    */
   public static updateTask(
     data: TDataUpdateTask,
-  ): CancelablePromise<TaskPublic> {
+  ): CancelablePromise<TaskUserPublic> {
     const { id, requestBody } = data
     return __request(OpenAPI, {
       method: "PUT",
@@ -676,6 +678,7 @@ export class TasksService {
       },
     })
   }
+  
 
   /**
    * Delete Task

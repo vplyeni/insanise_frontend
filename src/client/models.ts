@@ -108,6 +108,7 @@ export type TaskField = {
   type: string;
   name: string;
   content: string;
+  represented_name: string;
 };
 
 export type TaskBase = {
@@ -131,5 +132,27 @@ export type TaskUpdate = TaskCreate
 
 export type TasksPublic = {
   data: Array<TaskPublic>
+  count: number
+}
+
+export type TaskUserPublic = {
+  task_id: string;
+  user_id: number;
+
+  name: string;
+  description: string;
+
+  fields: TaskField[];
+  created_at: Date;
+  updated_at: Date;
+  created_by: number;
+  updated_by: number;
+
+  status: string;
+  company_id: number;
+}
+
+export type TaskUsersPublic = {
+  data: Array<TaskUserPublic>
   count: number
 }

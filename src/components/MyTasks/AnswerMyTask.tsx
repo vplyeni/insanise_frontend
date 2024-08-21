@@ -19,15 +19,14 @@ import {
   import {
     type ApiError,
     TaskField,
-    type TaskPublic,
-    type TaskUpdate,
+    type TaskUserPublic,
     TasksService,
   } from "../../client"
   import useCustomToast from "../../hooks/useCustomToast"
   import { handleError } from "../../utils"
   
   interface AnswerMyTaskProps {
-    item: TaskPublic
+    item: TaskUserPublic
     isOpen: boolean
     onClose: () => void
   }
@@ -40,15 +39,15 @@ import {
       handleSubmit,
       reset,
       formState: { isSubmitting, errors, isDirty },
-    } = useForm<TaskUpdate>({
+    } = useForm<TaskUserPublic>({
       mode: "onBlur",
       criteriaMode: "all",
       defaultValues: item,
     })
   
     const mutation = useMutation({
-      mutationFn: (data: TaskUpdate) =>
-        TasksService.updateTask({ id: item.id, requestBody: data }),
+      mutationFn: (data: TaskUserPublic) =>
+        TasksService.updateTask({ id: item.task_id, requestBody: data }),
       onSuccess: () => {
         showToast("Success!", "Task updated successfully.", "success")
         onClose()
@@ -61,12 +60,11 @@ import {
       },
     })
   
-    const onSubmit: SubmitHandler<TaskUpdate> = async (data) => {
+    const onSubmit: SubmitHandler<TaskUserPublic> = async (data) => {
       mutation.mutate(data)
     }
   
     const onCancel = () => {
-      reset()
       onClose()
     }
 
@@ -97,7 +95,7 @@ import {
                 item.fields.map((field:TaskField,index)=>(
                     <FieldAnswer
                         key={index}
-                        task_id={item.id}
+                        task_id={item.task_id}
                         field={field}
                         index={index}
                     />
