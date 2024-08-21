@@ -24,6 +24,7 @@ import type {
   UsersPublic,
 } from "./models"
 
+
 export type TDataLoginAccessToken = {
   formData: Body_login_login_access_token
 }
@@ -558,6 +559,12 @@ export type TDataDeleteTask = {
   id: string
 }
 
+export type TDataFileForField = {
+  task_id: string,
+  field_id: string,
+  file: File|null
+}
+
 export class TasksService {
   /**
    * Read Items
@@ -687,6 +694,20 @@ export class TasksService {
       errors: {
         422: "Validation Error",
       },
+    })
+  }
+  
+  public static addFileToField(data:TDataFileForField): CancelablePromise<Message> {
+    const {task_id, field_id, file} = data
+    return __request(OpenAPI, {
+      method: "POST",
+      url: ":8000/api/harmonise/field_files/?task_id="+task_id+"&field_id="+field_id,
+      errors: {
+        422: "Validation Error",
+      },
+      formData:{
+        'file': file
+      }
     })
   }
 }

@@ -11,6 +11,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Text,
   } from "@chakra-ui/react"
   import { useMutation, useQueryClient } from "@tanstack/react-query"
   import { type SubmitHandler, useForm } from "react-hook-form"
@@ -77,33 +78,26 @@ import {
         <Modal
           isOpen={isOpen}
           onClose={onClose}
-          size={{ base: "sm", md: "md" }}
+          size={{ base: "xl", md: "2xl" }} 
           isCentered
         >
           <ModalOverlay />
           <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <ModalHeader>Answer Your Task</ModalHeader>
+            <ModalHeader>Task : {item.name}</ModalHeader>
+            <Text marginLeft={"25px"} marginRight={"25px"} marginBottom={"0px"}>
+              Description:
+            </Text>
+            <Text marginLeft={"25px"} marginRight={"25px"} marginBottom={"20px"} color={"dimgray"}>
+              {item.description}
+            </Text>
             <ModalCloseButton />
             <ModalBody pb={6}>
-                <FormLabel htmlFor="title">Title</FormLabel>
-                <Input
-                  id="name"
-                  type="text"
-                  disabled
-                />
-                <FormLabel htmlFor="description">Description</FormLabel>
-                <Input
-                  id="description"
-                  placeholder="Description"
-                  type="text"
-                  disabled
-                  border={"transparent"}
-                />
                 {
 
                 item.fields.map((field:TaskField,index)=>(
                     <FieldAnswer
                         key={index}
+                        task_id={item.id}
                         field={field}
                         index={index}
                     />
@@ -118,7 +112,6 @@ import {
                 variant="primary"
                 type="submit"
                 isLoading={isSubmitting}
-                isDisabled={!isDirty}
               >
                 Save
               </Button>

@@ -10,6 +10,7 @@ const theme = extendTheme({
   colors: {
     ui: {
       main: "#f37024",
+      main_sec: "#db641f",
       secondary: "#EDF2F7",
       success: "#48BB78",
       danger: "#E53E3E",
@@ -26,7 +27,7 @@ const theme = extendTheme({
           backgroundColor: "ui.main",
           color: "ui.light",
           _hover: {
-            backgroundColor: "#db641f",
+            backgroundColor: "ui.main_sec"
           },
           _disabled: {
             ...disabledStyles,

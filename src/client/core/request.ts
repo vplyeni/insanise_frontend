@@ -327,11 +327,16 @@ export const request = <T>(
   config: OpenAPIConfig,
   options: ApiRequestOptions,
   axiosClient: AxiosInstance = axios,
+  formData_custom: FormData = new FormData(),
+  formData_used: boolean = false,
 ): CancelablePromise<T> => {
   return new CancelablePromise(async (resolve, reject, onCancel) => {
     try {
       const url = getUrl(config, options)
-      const formData = getFormData(options)
+      let formData = getFormData(options)
+      if(formData_used){
+        formData = formData_custom
+      }
       const body = getRequestBody(options)
       const headers = await getHeaders(config, options)
 
