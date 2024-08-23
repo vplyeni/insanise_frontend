@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   Flex,
   FormControl,
@@ -12,37 +13,36 @@ import {
 } from "@chakra-ui/react";
 import { TaskField, TasksService, TDataFileForField } from "../../client";
 import { useState } from "react";
+import { FiTrash } from "react-icons/fi";
+import { IconButton } from "@chakra-ui/react";
 
-interface FieldAnswer {
-  task_id: string;
+interface FieldTask {
+  removeTask: any;
   field: TaskField;
   index: number;
-  textareas: any;
-  setTextareas: any;
 }
 
-const FieldAnswer = ({
-  task_id,
-  field,
-  index,
-  textareas,
-  setTextareas,
-}: FieldAnswer) => {
+const FieldTask = ({ removeTask, field, index }: FieldTask) => {
   const [name, setName] = useState(field.represented_name);
 
   return (
-    <div key={index}>
+    <Flex verticalAlign={"center"} key={index} style={{ marginTop: "10px" }}>
+      <IconButton
+        onClick={() => {
+          removeTask(index);
+        }}
+        style={{ marginRight: "10px" }}
+        aria-label="Delete"
+        icon={<FiTrash />}
+      />
       {field.type == "plain_text" ? (
         <Input
+          isDisabled
           placeholder={field.name}
           defaultValue={field.content}
-          style={{ marginTop: "10px" }}
           onChange={(event) => {
             const text = event.target.value;
-            textareas[field.id] = text;
             console.log(text);
-
-            setTextareas(textareas);
           }}
         />
       ) : field.type == "long_text" ? (
@@ -52,8 +52,7 @@ const FieldAnswer = ({
             defaultValue={field.content}
             onChange={(event) => {
               const text = event.target.value;
-              textareas[field.id] = text;
-              setTextareas(textareas);
+              console.log(text);
             }}
             style={{
               minHeight: "120px",
@@ -62,16 +61,14 @@ const FieldAnswer = ({
         </>
       ) : (
         <Card
-          marginTop={"10px"}
-          paddingTop={"6px"}
           padding={"10px"}
           defaultValue={field.name}
           minHeight={"100px"}
           borderColor={"#A0AEC0"}
           style={
-            field.represented_name === ""
-              ? {}
-              : { backgroundColor: "#f3702420" }
+            field.represented_name === "" || !field.represented_name
+              ? { width: "100%" }
+              : { width: "100%", backgroundColor: "#f3702420" }
           }
         >
           <FormLabel
@@ -84,6 +81,7 @@ const FieldAnswer = ({
           </FormLabel>
           <Flex alignItems="center">
             <Input
+              isDisabled
               type="file"
               style={{
                 color: "transparent",
@@ -92,26 +90,6 @@ const FieldAnswer = ({
               }}
               borderColor={"#A0AEC000"}
               _hover={{ borderColor: "#f3702400" }}
-              onChange={(input) => {
-                console.log(field);
-                console.log(input.target.files);
-                if (
-                  input &&
-                  input.target &&
-                  input.target.files &&
-                  input.target.files.length > 0
-                ) {
-                  TasksService.addFileToField({
-                    task_id: task_id,
-                    field_id: field.id,
-                    file: input.target.files[0],
-                  } as TDataFileForField).then((res: any) => {
-                    field.content = res.name;
-                    field.represented_name = res.represent_name;
-                    setName(res.represent_name);
-                  });
-                }
-              }}
             />
             {name === "" ? (
               <Text isTruncated maxW={350}>
@@ -125,7 +103,7 @@ const FieldAnswer = ({
           </Flex>
         </Card>
       )}
-    </div>
+    </Flex>
   );
 };
-export default FieldAnswer;
+export default FieldTask;

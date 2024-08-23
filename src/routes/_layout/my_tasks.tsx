@@ -11,42 +11,42 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
-import { z } from "zod"
+} from "@chakra-ui/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { z } from "zod";
 
-import { TasksService } from "../../client"
-import ActionsMenu from "../../components/Common/ActionsMenu"
+import { TasksService } from "../../client";
+import ActionsMenu from "../../components/Common/ActionsMenu";
 //import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
 const MyTasksSearchSchema = z.object({
   page: z.number().catch(1),
-})
+});
 
 export const Route = createFileRoute("/_layout/my_tasks")({
   component: MyTasks,
   validateSearch: (search) => MyTasksSearchSchema.parse(search),
-})
+});
 
-const PER_PAGE = 5
+const PER_PAGE = 5;
 
 function getTasksQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
       TasksService.readTasks({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
     queryKey: ["Tasks", { page }],
-  }
+  };
 }
 
 function MyTasksTable() {
-  const queryClient = useQueryClient()
-  const { page } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
+  const queryClient = useQueryClient();
+  const { page } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
   const setPage = (page: number) =>
-    navigate({ search: (prev) => ({ ...prev, page }) })
+    navigate({ search: (prev) => ({ ...prev, page }) });
 
   const {
     data: Tasks,
@@ -55,16 +55,16 @@ function MyTasksTable() {
   } = useQuery({
     ...getTasksQueryOptions({ page }),
     placeholderData: (prevData) => prevData,
-  })
+  });
 
-  const hasNextPage = !isPlaceholderData && Tasks?.data.length === PER_PAGE
-  const hasPreviousPage = page > 1
+  const hasNextPage = !isPlaceholderData && Tasks?.data.length === PER_PAGE;
+  const hasPreviousPage = page > 1;
 
   useEffect(() => {
     if (hasNextPage) {
-      queryClient.prefetchQuery(getTasksQueryOptions({ page: page + 1 }))
+      queryClient.prefetchQuery(getTasksQueryOptions({ page: page + 1 }));
     }
-  }, [page, queryClient, hasNextPage])
+  }, [page, queryClient, hasNextPage]);
 
   return (
     <>
@@ -90,8 +90,8 @@ function MyTasksTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {Tasks?.data.map((Task:any) => (
-                <Tr key={Task.id} opacity={isPlaceholderData ? 0.5 : 1}>
+              {Tasks?.data.map((Task: any, index: number) => (
+                <Tr key={index} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td isTruncated maxWidth="150px">
                     {Task.name}
                   </Td>
@@ -102,9 +102,7 @@ function MyTasksTable() {
                   >
                     {Task.description || "N/A"}
                   </Td>
-                  <Td>
-                    {Task.status}
-                  </Td>
+                  <Td>{Task.status}</Td>
                   <Td>
                     <ActionsMenu type={"MyTasks"} value={Task} />
                   </Td>
@@ -130,7 +128,7 @@ function MyTasksTable() {
         </Button>
       </Flex>
     </>
-  )
+  );
 }
 
 function MyTasks() {
@@ -142,5 +140,5 @@ function MyTasks() {
 
       <MyTasksTable />
     </Container>
-  )
+  );
 }
