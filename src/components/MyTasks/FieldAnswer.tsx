@@ -11,7 +11,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { TaskField, TasksService, TDataFileForField } from "../../client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface FieldAnswer {
   task_id: string;
@@ -28,8 +28,28 @@ const FieldAnswer = ({
   textareas,
   setTextareas,
 }: FieldAnswer) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(field.represented_name);
+  const [inputValue, setInputValue] = useState("");
+  const [debouncedValue, setDebouncedValue] = useState(inputValue);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(inputValue);
+    }, 500); // Delay in milliseconds
+
+    // Clean up the timeout if the user is still typing
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [inputValue]);
+
+  useEffect(() => {
+    textareas[field.id] = debouncedValue;
+    setTextareas(textareas);
+    setIsLoading;
+    console.log("User finished typing:", debouncedValue);
+  }, [debouncedValue]);
   return (
     <div key={index}>
       {field.type == "plain_text" ? (

@@ -11,43 +11,47 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
-import { z } from "zod"
+} from "@chakra-ui/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { z } from "zod";
 
-import { TasksService } from "../../client"
-import AddTaskModal from "../../components/Task/AddTask"
-import Navbar from "../../components/Common/Navbar"
+import { TaskBase, TasksService } from "../../client";
+import AddTaskModal from "../../components/Task/AddTask";
+import Navbar from "../../components/Common/Navbar";
+import ActionsMenu from "../../components/Common/ActionsMenu";
 //import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
 const TasksSearchSchema = z.object({
   page: z.number().catch(1),
-})
+});
 
 export const Route = createFileRoute("/_layout/tasks")({
   component: Tasks,
   validateSearch: (search) => TasksSearchSchema.parse(search),
-})
+});
 
-const PER_PAGE = 5
+const PER_PAGE = 5;
 
 function getTasksQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      TasksService.readAllTasks({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      TasksService.readAllTasks({
+        skip: (page - 1) * PER_PAGE,
+        limit: PER_PAGE,
+      }),
     queryKey: ["Tasks", { page }],
-  }
+  };
 }
 
 function TasksTable() {
-  const queryClient = useQueryClient()
-  const { page } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
+  const queryClient = useQueryClient();
+  const { page } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
   const setPage = (page: number) =>
-    navigate({ search: (prev) => ({ ...prev, page }) })
+    navigate({ search: (prev) => ({ ...prev, page }) });
 
   const {
     data: Tasks,
@@ -56,20 +60,19 @@ function TasksTable() {
   } = useQuery({
     ...getTasksQueryOptions({ page }),
     placeholderData: (prevData) => prevData,
-  })
+  });
 
-  const hasNextPage = !isPlaceholderData && Tasks?.data.length === PER_PAGE
-  const hasPreviousPage = page > 1
+  const hasNextPage = !isPlaceholderData && Tasks?.data.length === PER_PAGE;
+  const hasPreviousPage = page > 1;
 
   useEffect(() => {
     if (hasNextPage) {
-      queryClient.prefetchQuery(getTasksQueryOptions({ page: page + 1 }))
+      queryClient.prefetchQuery(getTasksQueryOptions({ page: page + 1 }));
     }
-  }, [page, queryClient, hasNextPage])
+  }, [page, queryClient, hasNextPage]);
 
   return (
-    <>  
-    
+    <>
       <TableContainer>
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
@@ -77,6 +80,8 @@ function TasksTable() {
               <Th>Name</Th>
               <Th>Description</Th>
               <Th>Status</Th>
+              <Th>Duration</Th>
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -91,7 +96,7 @@ function TasksTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {Tasks?.data.map((Task:any) => (
+              {Tasks?.data.map((Task: TaskBase) => (
                 <Tr key={Task.id} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td isTruncated maxWidth="150px">
                     {Task.name}
@@ -103,8 +108,13 @@ function TasksTable() {
                   >
                     {Task.description || "N/A"}
                   </Td>
+                  <Td>{Task.status}</Td>
                   <Td>
-                    {Task.status}
+                    {(Task.task_period - (Task.task_period % 1440)) / 1440}:
+                    {Task.task_period % 1440}
+                  </Td>
+                  <Td>
+                    <ActionsMenu type={"Task"} value={Task} />
                   </Td>
                 </Tr>
               ))}
@@ -128,7 +138,7 @@ function TasksTable() {
         </Button>
       </Flex>
     </>
-  )
+  );
 }
 
 function Tasks() {
@@ -140,5 +150,5 @@ function Tasks() {
       <Navbar type={"Task"} addModalAs={AddTaskModal} />
       <TasksTable />
     </Container>
-  )
+  );
 }

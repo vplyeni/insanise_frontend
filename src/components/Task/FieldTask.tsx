@@ -48,6 +48,7 @@ const FieldTask = ({ removeTask, field, index }: FieldTask) => {
       ) : field.type == "long_text" ? (
         <>
           <Textarea
+            isDisabled
             placeholder={field.name}
             defaultValue={field.content}
             onChange={(event) => {

@@ -9,6 +9,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   Text,
   Textarea,
@@ -16,6 +21,7 @@ import {
 import { useState } from "react";
 import FieldTask from "./FieldTask";
 import useCustomToast from "../../hooks/useCustomToast";
+import { TaskBase, TasksService } from "../../client";
 
 interface AddTaskProps {
   isOpen: boolean;
@@ -25,6 +31,8 @@ interface AddTaskProps {
 const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
   const [fields, setFields] = useState<any[]>([]);
   const [task, setTask] = useState<any>({});
+  const [hour, setHour] = useState<any>(undefined);
+  const [day, setDay] = useState<any>(undefined);
 
   const showToast = useCustomToast();
 
@@ -56,35 +64,88 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Flex
+              justify={"left"}
               style={{
                 marginBottom: "10px",
               }}
+              alignContent={"start"}
+              verticalAlign={"center"}
             >
-              <Input
+              <Text style={{ alignContent: "center", marginRight: "10px" }}>
+                Days:
+              </Text>
+              <NumberInput
+                placeholder="Day"
+                value={day}
+                defaultValue={undefined}
+                step={1}
+                min={0}
+                max={30}
                 onChange={(event) => {
-                  console.log(event.target);
-                  const text: string = event.target.value;
-                  const last = text
-                    .split("-")
-                    .reverse()
-                    .reduce((a, b) => a + "-" + b);
-                  task["due_date"] = last;
-                  setTask(task);
-                }}
-                placeholder="Due Date"
-                type="date"
-                maxW={"250px"}
-              />
-              <Text
-                textAlign="center"
-                style={{
-                  marginLeft: "20px",
-                  color: "#00000066",
-                  marginTop: "5px",
+                  if (event === "") {
+                    setDay(0);
+                    return 0;
+                  }
+                  const value = parseInt(event);
+                  if (value > 30) {
+                    setDay(30);
+                    return 30 + "";
+                  } else {
+                    setDay(value);
+                    return value + "";
+                  }
                 }}
               >
-                Due Date
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              <Text
+                style={{
+                  alignContent: "center",
+                  marginLeft: "20px",
+                  marginRight: "10px",
+                }}
+              >
+                Hours:
               </Text>
+              <NumberInput
+                style={{ marginLeft: "10px" }}
+                value={hour}
+                placeholder="Hour"
+                step={0.15}
+                defaultValue={undefined}
+                min={0}
+                max={23.6}
+                onChange={(event) => {
+                  let value = 0;
+                  if (event !== "") {
+                    value = parseFloat(event);
+                  }
+                  let minute = Math.round((value % 1) * 100);
+
+                  if (minute % 15 > 7.5) {
+                    minute = minute + (15 - (minute % 15));
+                  } else {
+                    minute = minute + (minute % 15);
+                  }
+
+                  if (minute > 59) {
+                    value = value - (value % 1) + minute / 100;
+                    value = Math.round(value);
+                  }
+
+                  setHour(value.toFixed(2));
+                }}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
             </Flex>
             <Input
               onChange={(event) => {
@@ -183,7 +244,27 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
             </Flex>
           </ModalBody>
           <ModalFooter gap={3}>
-            <Button variant="primary">Save</Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                let data: TaskBase = task;
+                let period = 0;
+                if (day) {
+                  period = 1440 * day;
+                }
+                if (hour) {
+                  period =
+                    period +
+                    Math.round(hour - (hour % 1)) +
+                    Math.round((hour % 1) * 100);
+                }
+                data.task_period = period;
+                data.fields = fields;
+                TasksService.createTask({ requestBody: data });
+              }}
+            >
+              Save
+            </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
