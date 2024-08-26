@@ -42,7 +42,7 @@ function getTasksQueryOptions({ page }: { page: number }) {
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
-    queryKey: ["Tasks", { page }],
+    queryKey: ["tasks", { page }],
   };
 }
 
@@ -110,8 +110,30 @@ function TasksTable() {
                   </Td>
                   <Td>{Task.status}</Td>
                   <Td>
-                    {(Task.task_period - (Task.task_period % 1440)) / 1440}:
-                    {Task.task_period % 1440}
+                    {Task.task_period > 1440 ? (
+                      <>{(Task.task_period / 1440).toFixed(0)} Days</>
+                    ) : (
+                      <></>
+                    )}
+                    {((Task.task_period - (Task.task_period % 60)) / 60) %
+                    24 ? (
+                      <>
+                        {" "}
+                        {(
+                          ((Task.task_period - (Task.task_period % 60)) / 60) %
+                          24
+                        ).toFixed(0)}{" "}
+                        Hours
+                      </>
+                    ) : (
+                      <></>
+                    )}
+
+                    {Task.task_period % 60 ? (
+                      <> {Task.task_period % 60} Minutes</>
+                    ) : (
+                      <></>
+                    )}
                   </Td>
                   <Td>
                     <ActionsMenu type={"Task"} value={Task} />

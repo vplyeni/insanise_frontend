@@ -21,20 +21,29 @@ import {
 import { useState } from "react";
 import FieldTask from "./FieldTask";
 import useCustomToast from "../../hooks/useCustomToast";
-import { ApiError, TaskBase, TasksService } from "../../client";
+import { ApiError, TaskBase, TaskPublic, TasksService } from "../../client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { handleError } from "../../utils";
 
-interface AddTaskProps {
+interface EditTaskProps {
+  item: TaskPublic;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
-  const [fields, setFields] = useState<any[]>([]);
-  const [task, setTask] = useState<any>({});
-  const [hour, setHour] = useState<any>(undefined);
-  const [day, setDay] = useState<any>(undefined);
+const EditTask = ({ item, isOpen, onClose }: EditTaskProps) => {
+  const [fields, setFields] = useState<any[]>(item.fields);
+  const [task, setTask] = useState<any>(item);
+  const [name, setName] = useState<any>(item.name);
+  const [description, setDescription] = useState<any>(item.description);
+  const [hour, setHour] = useState<any>(
+    ((item.task_period % 1440) - ((item.task_period % 1440) % 60)) / 60 +
+      ((item.task_period % 1440) % 60) / 100
+  );
+  const [day, setDay] = useState<any>(
+    (item.task_period - (item.task_period % 1440)) / 1440
+  );
+  console.log(item.id);
 
   const showToast = useCustomToast();
   const queryClient = useQueryClient();
@@ -63,9 +72,9 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: TaskBase) =>
-      TasksService.createTask({ requestBody: data }),
+      TasksService.updateTask({ id: data.id, requestBody: data }),
     onSuccess: () => {
-      showToast("Success!", "Item created successfully.", "success");
+      showToast("Success!", "Task updated successfully.", "success");
       reset();
       onClose();
     },
@@ -175,20 +184,24 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
               </NumberInput>
             </Flex>
             <Input
+              value={name ? name : ""}
               onChange={(event) => {
                 const text = event.target.value;
                 console.log(text);
                 task["name"] = text;
                 setTask(task);
+                setName(text);
               }}
               placeholder={"Task name"}
             />
             <Textarea
               placeholder={"Description"}
+              value={description ? description : ""}
               onChange={(event) => {
                 const text = event.target.value;
                 task["description"] = text;
                 setTask(task);
+                setDescription(text);
               }}
               style={{
                 marginTop: "10px",
@@ -306,4 +319,4 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
     </>
   );
 };
-export default AddTaskModal;
+export default EditTask;

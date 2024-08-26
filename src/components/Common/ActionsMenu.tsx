@@ -5,28 +5,34 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
-} from "@chakra-ui/react"
-import { BsThreeDotsVertical } from "react-icons/bs"
-import { FiEdit, FiTrash } from "react-icons/fi"
+} from "@chakra-ui/react";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { FiEdit, FiTrash } from "react-icons/fi";
 
-import type { ItemPublic, TaskPublic, UserPublic } from "../../client"
-import EditUser from "../Admin/EditUser"
-import EditItem from "../Items/EditItem"
-import Delete from "./DeleteAlert"
-import AnswerMyTask from "../MyTasks/AnswerMyTask"
+import type {
+  ItemPublic,
+  TaskPublic,
+  TaskUserPublic,
+  UserPublic,
+} from "../../client";
+import EditUser from "../Admin/EditUser";
+import EditItem from "../Items/EditItem";
+import Delete from "./DeleteAlert";
+import AnswerMyTask from "../MyTasks/AnswerMyTask";
+import EditTask from "../Task/EditTask";
 
 interface ActionsMenuProps {
-  type: string
-  value: ItemPublic | UserPublic
-  disabled?: boolean
+  type: string;
+  value: ItemPublic | UserPublic;
+  disabled?: boolean;
 }
 
 const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
-  const editUserModal = useDisclosure()
-  const deleteModal = useDisclosure()
+  const editUserModal = useDisclosure();
+  const deleteModal = useDisclosure();
 
   console.log(type);
-  
+
   return (
     <>
       <Menu>
@@ -43,16 +49,15 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
           >
             {type == "MyTasks" ? "Answer Your Task" : <>Edit {type}</>}
           </MenuItem>
-          {
-          type !== "MyTasks" &&
-          <MenuItem
-            onClick={deleteModal.onOpen}
-            icon={<FiTrash fontSize="16px" />}
-            color="ui.danger"
-          >
-            Delete {type}
-          </MenuItem>
-        }
+          {type !== "MyTasks" && (
+            <MenuItem
+              onClick={deleteModal.onOpen}
+              icon={<FiTrash fontSize="16px" />}
+              color="ui.danger"
+            >
+              Delete {type}
+            </MenuItem>
+          )}
         </MenuList>
         {type === "User" ? (
           <EditUser
@@ -61,31 +66,35 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             onClose={editUserModal.onClose}
           />
         ) : type === "MyTasks" ? (
-        <AnswerMyTask
-          item={value as TaskPublic}
-          isOpen={editUserModal.isOpen}
-          onClose={editUserModal.onClose}
-        />
-        ) :(
+          <AnswerMyTask
+            item={value as TaskUserPublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
+        ) : type === "Task" ? (
+          <EditTask
+            item={value as TaskPublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          ></EditTask>
+        ) : (
           <EditItem
             item={value as ItemPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />
         )}
-        {
-          type !== "MyTasks" &&
+        {type !== "MyTasks" && (
           <Delete
-          type={type}
-          id={value.id+""}
-          isOpen={deleteModal.isOpen}
-          onClose={deleteModal.onClose}
-        />
-        }
-
+            type={type}
+            id={value.id + ""}
+            isOpen={deleteModal.isOpen}
+            onClose={deleteModal.onClose}
+          />
+        )}
       </Menu>
     </>
-  )
-}
+  );
+};
 
-export default ActionsMenu
+export default ActionsMenu;

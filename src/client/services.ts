@@ -554,7 +554,7 @@ export type TDataReadTask = {
 };
 export type TDataUpdateTask = {
   id: string;
-  requestBody: TaskUserPublic;
+  requestBody: TaskUpdate;
 };
 export type TDataDeleteTask = {
   id: string;
@@ -668,11 +668,11 @@ export class TasksService {
    */
   public static updateTask(
     data: TDataUpdateTask
-  ): CancelablePromise<TaskUserPublic> {
+  ): CancelablePromise<TaskPublic> {
     const { id, requestBody } = data;
     return __request(OpenAPI, {
       method: "PUT",
-      url: ":8000/api/harmonise/task/{id}",
+      url: ":8000/api/harmonise/task/manager/{id}/",
       path: {
         id,
       },
@@ -694,7 +694,7 @@ export class TasksService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: ":8000/api/harmonise/task/{id}",
+      url: ":8000/api/harmonise/task/manager/{id}/",
       path: {
         id,
       },
@@ -716,7 +716,7 @@ export class TasksService {
     return __request(OpenAPI, {
       method: "POST",
       url:
-        ":8000/api/harmonise/field_files/?task_id=" +
+        ":8000/api/harmonise/task_user/file/?task_id=" +
         task_id +
         "&field_id=" +
         field_id,
@@ -740,7 +740,7 @@ export class TasksService {
   ): CancelablePromise<Message> {
     return __request(OpenAPI, {
       method: "PUT",
-      url: ":8000/api/harmonise/field_files/",
+      url: ":8000/api/harmonise/task_user/file/",
       errors: {
         422: "Validation Error",
       },
