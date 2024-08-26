@@ -109,6 +109,7 @@ export type TaskField = {
   name: string;
   content: string;
   represented_name: string;
+  updated_at: Date;
 };
 
 export type TaskBase = {

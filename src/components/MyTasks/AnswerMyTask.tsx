@@ -103,44 +103,9 @@ const AnswerMyTask = ({ item, isOpen, onClose }: AnswerMyTaskProps) => {
             ))}
           </ModalBody>
           <ModalFooter gap={3}>
-            <Button
-              variant="primary"
-              onClick={() => {
-                const keys: string[] = Object.keys(textareas);
-                const values: string[] = Object.values(textareas);
-
-                for (let i = 0; i < item.fields.length; i++) {
-                  for (let j = 0; i < keys.length; i++) {
-                    if (item.fields[i].id === keys[j]) {
-                      item.fields[i].content = values[j];
-                    }
-                  }
-                }
-                for (let i = 0; i < keys.length; i++) {
-                  console.log(keys[i]);
-
-                  TasksService.customizeFieldWithTaskId({
-                    content: values[i],
-                    field_id: keys[i],
-                    task_id: item.task_id,
-                  }).then(() => {
-                    i++;
-                    if (i > keys.length - 1) {
-                      onClose();
-                      showToast(
-                        "Success!",
-                        "Task Successfuly saved.",
-                        "success"
-                      );
-                    }
-                  });
-                }
-              }}
-              isLoading={isSubmitting}
-            >
-              Save
+            <Button variant="primary" isLoading={isSubmitting}>
+              Complete
             </Button>
-            <Button onClick={onCancel}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

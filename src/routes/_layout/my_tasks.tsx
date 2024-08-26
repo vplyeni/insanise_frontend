@@ -37,7 +37,7 @@ function getTasksQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
       TasksService.readTasks({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
-    queryKey: ["Tasks", { page }],
+    queryKey: ["my_tasks", { page }],
   };
 }
 

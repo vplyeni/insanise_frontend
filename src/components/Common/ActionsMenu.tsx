@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FiEdit, FiTrash } from "react-icons/fi";
+import { FiCornerDownRight, FiEdit, FiTrash } from "react-icons/fi";
 
 import type {
   ItemPublic,
@@ -18,8 +18,10 @@ import type {
 import EditUser from "../Admin/EditUser";
 import EditItem from "../Items/EditItem";
 import Delete from "./DeleteAlert";
-import AnswerMyTask from "../MyTasks/AnswerMyTask";
+
 import EditTask from "../Task/EditTask";
+import AnswerMyTask from "../MyTasks/AnswerMyTask";
+import AssignTask from "../Task/AssignTask";
 
 interface ActionsMenuProps {
   type: string;
@@ -29,6 +31,7 @@ interface ActionsMenuProps {
 
 const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const editUserModal = useDisclosure();
+  const assignTaskModal = useDisclosure();
   const deleteModal = useDisclosure();
 
   console.log(type);
@@ -49,6 +52,15 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
           >
             {type == "MyTasks" ? "Answer Your Task" : <>Edit {type}</>}
           </MenuItem>
+          {type === "Task" && (
+            <MenuItem
+              onClick={assignTaskModal.onOpen}
+              icon={<FiCornerDownRight fontSize="16px" />}
+              color="ui.success"
+            >
+              Assign {type}
+            </MenuItem>
+          )}
           {type !== "MyTasks" && (
             <MenuItem
               onClick={deleteModal.onOpen}
@@ -59,30 +71,33 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             </MenuItem>
           )}
         </MenuList>
-        {type === "User" ? (
+        {type === "User" && (
           <EditUser
             user={value as UserPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />
-        ) : type === "MyTasks" ? (
+        )}
+        {type === "MyTasks" && (
           <AnswerMyTask
             item={value as TaskUserPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />
-        ) : type === "Task" ? (
+        )}
+        {type === "Task" && (
           <EditTask
             item={value as TaskPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           ></EditTask>
-        ) : (
-          <EditItem
-            item={value as ItemPublic}
-            isOpen={editUserModal.isOpen}
-            onClose={editUserModal.onClose}
-          />
+        )}
+        {type === "Task" && (
+          <AssignTask
+            item={value as TaskPublic}
+            isOpen={assignTaskModal.isOpen}
+            onClose={assignTaskModal.onClose}
+          ></AssignTask>
         )}
         {type !== "MyTasks" && (
           <Delete
