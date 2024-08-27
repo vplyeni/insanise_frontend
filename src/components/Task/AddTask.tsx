@@ -58,6 +58,7 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
   };
 
   const onCancel = () => {
+    reset();
     onClose();
   };
 
@@ -175,6 +176,7 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
               </NumberInput>
             </Flex>
             <Input
+              defaultValue={task && task["name"] && task["name"]}
               onChange={(event) => {
                 const text = event.target.value;
                 console.log(text);
@@ -184,6 +186,7 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
               placeholder={"Task name"}
             />
             <Textarea
+              defaultValue={task && task["description"] && task["description"]}
               placeholder={"Description"}
               onChange={(event) => {
                 const text = event.target.value;

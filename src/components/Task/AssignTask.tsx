@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   Flex,
   Input,
   Modal,
@@ -15,6 +16,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  Spinner,
   Text,
   Textarea,
 } from "@chakra-ui/react";
@@ -33,22 +35,9 @@ interface AssignTaskProps {
 const AssignTask = ({ isOpen, onClose }: AssignTaskProps) => {
   const showToast = useCustomToast();
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const removeArea = (index: number) => {
-    if (index >= 0 && index < fields.length) {
-      const ls = [...fields.slice(0, index), ...fields.slice(index + 1)];
-      setFields(ls);
-    }
-  };
-
-  const reset = () => {
-    setFields([]);
-    setTask({});
-    setHour(undefined);
-    setDay(undefined);
-    setNewName("");
-    setNewType("");
-  };
+  const reset = () => {};
 
   const onCancel = () => {
     onClose();
@@ -82,8 +71,32 @@ const AssignTask = ({ isOpen, onClose }: AssignTaskProps) => {
         <ModalContent as="form">
           <ModalHeader>Assign This Task</ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={6}></ModalBody>
+          <ModalBody minH="300px" pb={6}>
+            {false ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  minHeight: "260px",
+                  alignItems: "center",
+                }}
+              >
+                {" "}
+                {/* Ensures the spinner is centered */}
+                <Spinner size="xl" />
+              </div>
+            ) : (
+              <>Loaded</>
+            )}
+          </ModalBody>
           <ModalFooter gap={3}>
+            <Button
+              _hover={{ backgroundColor: "#FF1002" }}
+              variant={"primary"}
+              onClick={onCancel}
+            >
+              Assign
+            </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </ModalFooter>
         </ModalContent>

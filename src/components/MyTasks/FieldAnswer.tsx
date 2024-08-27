@@ -1,23 +1,16 @@
 import {
-  Box,
   Card,
   Flex,
-  FormControl,
   FormLabel,
   Input,
-  InputGroup,
-  InputRightElement,
   Spacer,
   Text,
   Textarea,
-  useQuery,
   Spinner,
 } from "@chakra-ui/react";
 import { TaskField, TasksService, TDataFileForField } from "../../client";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { log } from "console";
-
 interface FieldAnswer {
   task_id: string;
   field: TaskField;
@@ -149,7 +142,7 @@ const FieldAnswer = ({
               paddingBottom: "10px",
             }}
           >
-            {isChanging || isLoading ? <Spinner /> : dateString}
+            {isChanging || isLoading ? <Spinner /> : "Saved: " + dateString}
           </div>
         </Card>
       ) : field.type == "long_text" ? (
@@ -177,7 +170,7 @@ const FieldAnswer = ({
               paddingBottom: "10px",
             }}
           >
-            {isChanging || isLoading ? <Spinner /> : dateString}
+            {isChanging || isLoading ? <Spinner /> : "Saved: " + dateString}
           </div>
         </Card>
       ) : (
@@ -241,7 +234,11 @@ const FieldAnswer = ({
               </Text>
             )}
             <Spacer></Spacer>
-            {isChanging || isLoading ? <Spinner /> : <Text>{dateString}</Text>}
+            {isChanging || isLoading ? (
+              <Spinner />
+            ) : (
+              <Text>{"Saved: " + dateString}</Text>
+            )}
           </Flex>
         </Card>
       )}
