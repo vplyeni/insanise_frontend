@@ -403,7 +403,7 @@ export class UsersService {
     console.log(request_body);
 
     return __request(OpenAPI, {
-      method: "GET",
+      method: "POST",
       url:
         ":8000/api/company/employees/search/?skip=" + skip + "&limit=" + limit,
       body: request_body,
@@ -599,6 +599,11 @@ export type TDataFileForField = {
   file: File | null;
 };
 
+export type TDataAssignTask = {
+  task_id: string;
+  assigned_to: number[];
+};
+
 export class TasksService {
   /**
    * Read Items
@@ -772,6 +777,18 @@ export class TasksService {
         422: "Validation Error",
       },
       body: data,
+    });
+  }
+
+  public static assignTask(data: TDataAssignTask): CancelablePromise<Message> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: ":8000/api/harmonise/task/manager/assign_task/",
+      body: data,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
     });
   }
 }
