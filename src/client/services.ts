@@ -186,6 +186,15 @@ export type TDataUpdateUser = {
 export type TDataDeleteUser = {
   userId: string;
 };
+export type TDataSearchUserPagination = {
+  skip: number;
+  limit: number;
+  request_body: TDataSearchUser;
+};
+export type TDataSearchUser = {
+  search: string;
+  selected_employees: number[];
+};
 
 export class UsersService {
   /**
@@ -381,6 +390,24 @@ export class UsersService {
       path: {
         user_id: userId,
       },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  public static searchUser(
+    data: TDataSearchUserPagination
+  ): CancelablePromise<Message> {
+    const { skip, limit, request_body } = data;
+    console.log(request_body);
+
+    return __request(OpenAPI, {
+      method: "GET",
+      url:
+        ":8000/api/company/employees/search/?skip=" + skip + "&limit=" + limit,
+      body: request_body,
+      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },

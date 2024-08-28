@@ -111,7 +111,13 @@ function TasksTable() {
                   <Td>{Task.status}</Td>
                   <Td>
                     {Task.task_period > 1440 ? (
-                      <>{(Task.task_period / 1440).toFixed(0)} Days</>
+                      <>
+                        {(
+                          (Task.task_period - (Task.task_period % 1440)) /
+                          1440
+                        ).toFixed(0)}{" "}
+                        Days
+                      </>
                     ) : (
                       <></>
                     )}

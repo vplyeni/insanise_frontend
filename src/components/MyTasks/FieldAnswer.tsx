@@ -38,6 +38,7 @@ const FieldAnswer = ({
   textareas,
   setTextareas,
 }: FieldAnswer) => {
+  const [first, setFirst] = useState(true);
   const [isChanging, setIsChanging] = useState(false);
   const [dateString, setDateString] = useState(
     to_date_string(new Date(field.updated_at))
@@ -58,21 +59,21 @@ const FieldAnswer = ({
 
   const loadingStyle = {
     ...baseStyle,
-    backgroundColor: "#FFFF0010",
+    backgroundColor: "#f3702420",
   };
 
   const loadedStyle = {
     ...baseStyle,
-    backgroundColor: "#FF00FF10",
+    backgroundColor: "#00FF0015",
   };
 
   const emptyStyle = {
     ...baseStyle,
-    backgroundColor: "#FF000010",
+    backgroundColor: "#FF000020",
   };
 
   const currentStyle =
-    field.content.length === 0
+    debouncedValue.length === 0
       ? emptyStyle
       : isLoading || isChanging
         ? loadingStyle
@@ -92,11 +93,17 @@ const FieldAnswer = ({
     }, [inputValue]);
 
     useEffect(() => {
-      textareas[field.id] = debouncedValue;
-      setTextareas(textareas);
-      setIsLoading(true);
-      mutation.mutate(debouncedValue);
-      console.log("User finished typing:", debouncedValue);
+      console.log("actually", first);
+      if (!first) {
+        textareas[field.id] = debouncedValue;
+        field.content = debouncedValue;
+        setTextareas(textareas);
+        setIsLoading(true);
+        mutation.mutate(debouncedValue);
+        console.log("User finished typing:", debouncedValue);
+      } else {
+        setFirst(false);
+      }
     }, [debouncedValue]);
   }
 
@@ -184,7 +191,7 @@ const FieldAnswer = ({
           style={
             field.represented_name === ""
               ? {}
-              : { backgroundColor: "#f3702420" }
+              : { backgroundColor: "#00ff0015" }
           }
         >
           <FormLabel
@@ -212,6 +219,7 @@ const FieldAnswer = ({
                   input.target.files &&
                   input.target.files.length > 0
                 ) {
+                  setIsLoading(true);
                   TasksService.addFileToField({
                     task_id: task_id,
                     field_id: field.id,
@@ -220,6 +228,10 @@ const FieldAnswer = ({
                     field.content = res.name;
                     field.represented_name = res.represent_name;
                     setName(res.represent_name);
+                    console.log(res);
+
+                    setDateString(to_date_string(new Date(res.updated_at)));
+                    setIsLoading(false);
                   });
                 }
               }}

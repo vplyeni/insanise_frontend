@@ -11,6 +11,7 @@ import { FiCornerDownRight, FiEdit, FiTrash } from "react-icons/fi";
 
 import type {
   ItemPublic,
+  TaskBase,
   TaskPublic,
   TaskUserPublic,
   UserPublic,
@@ -25,7 +26,7 @@ import AssignTask from "../Task/AssignTask";
 
 interface ActionsMenuProps {
   type: string;
-  value: ItemPublic | UserPublic;
+  value: ItemPublic | UserPublic | TaskBase;
   disabled?: boolean;
 }
 
