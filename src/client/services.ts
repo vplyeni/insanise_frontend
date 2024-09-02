@@ -593,6 +593,10 @@ export type TDataFieldCustomize = {
   field_id: string;
 };
 
+export type TDataCompleteTask = {
+  task_id: string;
+};
+
 export type TDataFileForField = {
   task_id: string;
   field_id: string;
@@ -644,6 +648,24 @@ export class TasksService {
       query: {
         skip,
         limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  public static readTaskResults(
+    data: TDataReadTasks = {}
+  ): CancelablePromise<TasksPublic> {
+    const { limit = 100, skip = 0 } = data;
+    return __request(OpenAPI, {
+      method: "GET",
+      url: ":8000/api/harmonise/task/manager/",
+      query: {
+        skip,
+        limit,
+        type: 1,
       },
       errors: {
         422: "Validation Error",
@@ -748,7 +770,7 @@ export class TasksService {
     return __request(OpenAPI, {
       method: "POST",
       url:
-        ":8000/api/harmonise/task_user/field/?task_id=" +
+        ":8000/api/harmonise/task_user/file/?task_id=" +
         task_id +
         "&field_id=" +
         field_id,
@@ -772,7 +794,21 @@ export class TasksService {
   ): CancelablePromise<Message> {
     return __request(OpenAPI, {
       method: "PUT",
-      url: ":8000/api/harmonise/task_user/field/",
+      url: ":8000/api/harmonise/task_user/text/",
+      errors: {
+        422: "Validation Error",
+      },
+      body: data,
+    });
+  }
+
+  public static completeTaskByTaskId(
+    data: TDataCompleteTask
+  ): CancelablePromise<Message> {
+    const { task_id } = data;
+    return __request(OpenAPI, {
+      method: "POST",
+      url: ":8000/api/harmonise/task_user/complete/?task_id=" + task_id,
       errors: {
         422: "Validation Error",
       },

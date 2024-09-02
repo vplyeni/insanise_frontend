@@ -38,7 +38,7 @@ const PER_PAGE = 5;
 function getTaskResultsQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      TasksService.readAllTasks({
+      TasksService.readTaskResults({
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
@@ -97,8 +97,8 @@ function TaskResultsTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {TaskResults?.data.map((TaskResult: TaskBase) => (
-                <Tr key={TaskResult.id} opacity={isPlaceholderData ? 0.5 : 1}>
+              {TaskResults?.data.map((TaskResult: TaskBase, index: number) => (
+                <Tr key={index} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td isTruncated maxWidth="150px">
                     {TaskResult.name}
                   </Td>

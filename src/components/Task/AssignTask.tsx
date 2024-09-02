@@ -53,6 +53,7 @@ const AssignTask = ({ item, isOpen, onClose }: AssignTaskProps) => {
       showToast("Error", err.body + "", "error");
     },
     onSuccess: (e: any) => {
+      showToast("Success", "Task Assigned Succesfully", "success");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       onClose();
     },
