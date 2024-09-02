@@ -16,6 +16,10 @@ import type {
   TaskUserPublic,
   TaskUsersPublic,
   TasksPublic,
+  TeamCreate,
+  TeamPublic,
+  TeamUpdate,
+  TeamsPublic,
   Token,
   UpdatePassword,
   UserCreate,
@@ -106,7 +110,7 @@ export class LoginService {
     const { email } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/password-recovery/{email}",
+      url: "/api/company/password-recovery/{email}",
       path: {
         email,
       },
@@ -128,7 +132,7 @@ export class LoginService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/reset-password/",
+      url: "/api/company/reset-password/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -149,7 +153,7 @@ export class LoginService {
     const { email } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/password-recovery-html-content/{email}",
+      url: "/api/company/password-recovery-html-content/{email}",
       path: {
         email,
       },
@@ -407,7 +411,7 @@ export class UtilsService {
     const { emailTo } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/utils/test-email/",
+      url: "/api/company/utils/test-email/",
       query: {
         email_to: emailTo,
       },
@@ -449,7 +453,7 @@ export class ItemsService {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/items/",
+      url: "/api/company/items/",
       query: {
         skip,
         limit,
@@ -472,7 +476,7 @@ export class ItemsService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/items/",
+      url: "/api/company/items/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -491,7 +495,7 @@ export class ItemsService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/items/{id}",
+      url: "/api/company/items/{id}",
       path: {
         id,
       },
@@ -513,7 +517,7 @@ export class ItemsService {
     const { id, requestBody } = data;
     return __request(OpenAPI, {
       method: "PUT",
-      url: "/api/v1/items/{id}",
+      url: "/api/company/items/{id}",
       path: {
         id,
       },
@@ -535,7 +539,137 @@ export class ItemsService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/v1/items/{id}",
+      url: "/api/company/items/{id}",
+      path: {
+        id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+}
+
+("Bitiş");
+
+export type TDataReadTeams = {
+  limit?: number;
+  skip?: number;
+};
+export type TDataCreateTeam = {
+  requestBody: TeamCreate;
+};
+export type TDataReadTeam = {
+  id: string;
+};
+export type TDataUpdateTeam = {
+  id: string;
+  requestBody: TeamUpdate;
+};
+export type TDataDeleteTeam = {
+  id: string;
+};
+
+export class TeamsService {
+  /**
+   * Read Teams
+   * Retrieve items.
+   * @returns TeamsPublic Successful Response
+   * @throws ApiError
+   */
+  public static readTeams(
+    data: TDataReadTeams = {}
+  ): CancelablePromise<TeamsPublic> {
+    const { limit = 100, skip = 0 } = data;
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/company/teams/",
+      query: {
+        skip,
+        limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Create Team
+   * Create new item.
+   * @returns TeamPublic Successful Response
+   * @throws ApiError
+   */
+  public static createTeam(
+    data: TDataCreateTeam
+  ): CancelablePromise<TeamPublic> {
+    const { requestBody } = data;
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/company/teams/",
+      body: requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Read Team
+   * Get item by ID.
+   * @returns TeamPublic Successful Response
+   * @throws ApiError
+   */
+  public static readTeam(data: TDataReadTeam): CancelablePromise<TeamPublic> {
+    const { id } = data;
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/company/teams/{id}",
+      path: {
+        id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Update Team
+   * Update an item.
+   * @returns TeamPublic Successful Response
+   * @throws ApiError
+   */
+  public static updateTeam(
+    data: TDataUpdateTeam
+  ): CancelablePromise<TeamPublic> {
+    const { id, requestBody } = data;
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/company/teams/{id}",
+      path: {
+        id,
+      },
+      body: requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Delete Team
+   * Delete an item.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static deleteTeam(data: TDataDeleteTeam): CancelablePromise<Message> {
+    const { id } = data;
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/company/teams/{id}",
       path: {
         id,
       },
@@ -587,7 +721,7 @@ export type TDataAssignTask = {
 
 export class TasksService {
   /**
-   * Read Items
+   * Read Teams
    * Retrieve items.
    * @returns TasksPublic Successful Response
    * @throws ApiError
@@ -610,7 +744,7 @@ export class TasksService {
   }
 
   /**
-   * Read Items
+   * Read Teams
    * Retrieve items.
    * @returns TasksPublic Successful Response
    * @throws ApiError

@@ -17,12 +17,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
 
-import { UsersService, TaskBase, TasksService, UserPublic } from "../../client";
-import AddTaskModal from "../../components/Task/AddTask";
-import Navbar from "../../components/Common/Navbar";
+import { UsersService, UserPublic } from "../../client";
 import ActionsMenu from "../../components/Common/ActionsMenu";
-//import Navbar from "../../components/Common/Navbar"
-//import AddTask from "../../components/Tasks/AddTask"
 
 const EmployeesSearchSchema = z.object({
   page: z.number().catch(1),

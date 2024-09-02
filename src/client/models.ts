@@ -29,6 +29,26 @@ export type ItemsPublic = {
   count: number;
 };
 
+export type TeamBase = {
+  id: number;
+  name: string;
+  description: string;
+  created_at: string | null;
+  updated_at: string | null;
+  company: number;
+};
+
+export type TeamCreate = TeamBase;
+
+export type TeamPublic = TeamBase;
+
+export type TeamUpdate = TeamBase;
+
+export type TeamsPublic = {
+  data: Array<TeamPublic>;
+  count: number;
+};
+
 export type Message = {
   message: string;
 };

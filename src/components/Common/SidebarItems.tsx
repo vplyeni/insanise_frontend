@@ -26,6 +26,7 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
     ? [
         ...items,
         { icon: FiUsers, title: "User Management", path: "/employees" },
+        { icon: FiUsers, title: "Team Management", path: "/teams" },
         { icon: FiBriefcase, title: "Task Management", path: "/tasks" },
         { icon: FiBriefcase, title: "Task Results", path: "/task_results" },
       ]
