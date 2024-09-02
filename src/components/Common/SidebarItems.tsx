@@ -1,37 +1,43 @@
-import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
-import { useQueryClient } from "@tanstack/react-query"
-import { Link } from "@tanstack/react-router"
-import { FiBriefcase, FiHome, FiSettings, FiUsers } from "react-icons/fi"
+import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { FiBriefcase, FiHome, FiSettings, FiUsers } from "react-icons/fi";
 
-import type { UserPublic } from "../../client"
+import type { UserPublic } from "../../client";
 
 const items = [
   { icon: FiHome, title: "Dashboard", path: "/" },
   { icon: FiBriefcase, title: "My Tasks", path: "/my_tasks" },
-  
-]
+];
 
 interface SidebarItemsProps {
-  onClose?: () => void
+  onClose?: () => void;
 }
 
 const SidebarItems = ({ onClose }: SidebarItemsProps) => {
-  const queryClient = useQueryClient()
-  const textColor = useColorModeValue("ui.main", "ui.light")
-  const bgActive = useColorModeValue("#E2E8F0", "#4A5568")
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"])
+  const queryClient = useQueryClient();
+  const textColor = useColorModeValue("ui.main", "ui.light");
+  const bgActive = useColorModeValue("#E2E8F0", "#4A5568");
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
 
   console.log(currentUser);
-  
+
   let finalItems = currentUser?.is_manager
-    ? [...items, { icon: FiBriefcase, title: "Task Management", path: "/tasks" }]
-    : items
+    ? [
+        ...items,
+        { icon: FiBriefcase, title: "Task Management", path: "/tasks" },
+        { icon: FiBriefcase, title: "Task Results", path: "/task_results" },
+      ]
+    : items;
   /*
   finalItems = currentUser?.is_superuser 
     ? [...finalItems, { icon: FiUsers, title: "Admin", path: "/admin" }]
     : finalItems
   */
-  finalItems = [...finalItems, { icon: FiSettings, title: "User Settings", path: "/settings" }]
+  finalItems = [
+    ...finalItems,
+    { icon: FiSettings, title: "User Settings", path: "/settings" },
+  ];
   const listItems = finalItems.map(({ icon, title, path }) => (
     <Flex
       as={Link}
@@ -51,13 +57,13 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
       <Icon as={icon} alignSelf="center" />
       <Text ml={2}>{title}</Text>
     </Flex>
-  ))
+  ));
 
   return (
     <>
       <Box>{listItems}</Box>
     </>
-  )
-}
+  );
+};
 
-export default SidebarItems
+export default SidebarItems;

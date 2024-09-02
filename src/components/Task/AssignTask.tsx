@@ -19,14 +19,22 @@ import useCustomToast from "../../hooks/useCustomToast";
 import AssignByEmployee from "./AssignByEmployee";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { TasksService, TDataAssignTask, UserPublic } from "../../client";
+import {
+  ApiError,
+  TaskPublic,
+  TasksService,
+  TDataAssignTask,
+  UserPublic,
+} from "../../client";
+import { handleError } from "../../utils";
 
 interface AssignTaskProps {
+  item: TaskPublic;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AssignTask = ({ isOpen, onClose }: AssignTaskProps) => {
+const AssignTask = ({ item, isOpen, onClose }: AssignTaskProps) => {
   const showToast = useCustomToast();
   const queryClient = useQueryClient();
   const [areYouSure, setAreYouSure] = useState(false);
@@ -41,8 +49,12 @@ const AssignTask = ({ isOpen, onClose }: AssignTaskProps) => {
   };
   const task_assingment_mutation = useMutation({
     mutationFn: (data: TDataAssignTask) => TasksService.assignTask(data),
+    onError: (err: ApiError) => {
+      showToast("Error", err.body + "", "error");
+    },
     onSuccess: (e: any) => {
-      console.log(e);
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      onClose();
     },
   });
   return (
@@ -100,7 +112,7 @@ const AssignTask = ({ isOpen, onClose }: AssignTaskProps) => {
               onClick={() => {
                 task_assingment_mutation.mutate({
                   assigned_to: selectedUsers.map((i) => i.id),
-                  task_id,
+                  task_id: item.id,
                 });
               }}
             >

@@ -300,7 +300,7 @@ export class UsersService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "PATCH",
-      url: "/api/v1/users/me/password",
+      url: ":8000/api/auth/user/change_password/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
