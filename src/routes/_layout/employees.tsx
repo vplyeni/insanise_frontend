@@ -17,34 +17,36 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
 
-import { TaskBase, TasksService } from "../../client";
+import { UsersService, TaskBase, TasksService, UserPublic } from "../../client";
+import AddTaskModal from "../../components/Task/AddTask";
+import Navbar from "../../components/Common/Navbar";
 import ActionsMenu from "../../components/Common/ActionsMenu";
 //import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
-const TaskResultsSearchSchema = z.object({
+const EmployeesSearchSchema = z.object({
   page: z.number().catch(1),
 });
 
-export const Route = createFileRoute("/_layout/task_results")({
-  component: TaskResults,
-  validateSearch: (search) => TaskResultsSearchSchema.parse(search),
+export const Route = createFileRoute("/_layout/employees")({
+  component: Employees,
+  validateSearch: (search) => EmployeesSearchSchema.parse(search),
 });
 
 const PER_PAGE = 5;
 
-function getTaskResultsQueryOptions({ page }: { page: number }) {
+function getEmployeesQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      TasksService.readTaskResults({
+      UsersService.readEmployees({
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
-    queryKey: ["task_results", { page }],
+    queryKey: ["employees", { page }],
   };
 }
 
-function TaskResultsTable() {
+function EmployeesTable() {
   const queryClient = useQueryClient();
   const { page } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
@@ -52,21 +54,20 @@ function TaskResultsTable() {
     navigate({ search: (prev) => ({ ...prev, page }) });
 
   const {
-    data: TaskResults,
+    data: Employees,
     isPending,
     isPlaceholderData,
   } = useQuery({
-    ...getTaskResultsQueryOptions({ page }),
+    ...getEmployeesQueryOptions({ page }),
     placeholderData: (prevData) => prevData,
   });
 
-  const hasNextPage =
-    !isPlaceholderData && TaskResults?.data.length === PER_PAGE;
+  const hasNextPage = !isPlaceholderData && Employees?.data.length === PER_PAGE;
   const hasPreviousPage = page > 1;
 
   useEffect(() => {
     if (hasNextPage) {
-      queryClient.prefetchQuery(getTaskResultsQueryOptions({ page: page + 1 }));
+      queryClient.prefetchQuery(getEmployeesQueryOptions({ page: page + 1 }));
     }
   }, [page, queryClient, hasNextPage]);
 
@@ -77,9 +78,6 @@ function TaskResultsTable() {
           <Thead>
             <Tr>
               <Th>Name</Th>
-              <Th>Description</Th>
-              <Th>Status</Th>
-              <Th>Duration</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -95,57 +93,13 @@ function TaskResultsTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {TaskResults?.data.map((TaskResult: TaskBase, index: number) => (
+              {Employees?.data.map((Employee: UserPublic, index: number) => (
                 <Tr key={index} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td isTruncated maxWidth="150px">
-                    {TaskResult.name}
-                  </Td>
-                  <Td
-                    color={!TaskResult.description ? "ui.dim" : "inherit"}
-                    isTruncated
-                    maxWidth="150px"
-                  >
-                    {TaskResult.description || "N/A"}
-                  </Td>
-                  <Td>{TaskResult.status}</Td>
-                  <Td>
-                    {TaskResult.task_period > 1440 ? (
-                      <>
-                        {(
-                          (TaskResult.task_period -
-                            (TaskResult.task_period % 1440)) /
-                          1440
-                        ).toFixed(0)}{" "}
-                        Days
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                    {((TaskResult.task_period - (TaskResult.task_period % 60)) /
-                      60) %
-                    24 ? (
-                      <>
-                        {" "}
-                        {(
-                          ((TaskResult.task_period -
-                            (TaskResult.task_period % 60)) /
-                            60) %
-                          24
-                        ).toFixed(0)}{" "}
-                        Hours
-                      </>
-                    ) : (
-                      <></>
-                    )}
-
-                    {TaskResult.task_period % 60 ? (
-                      <> {TaskResult.task_period % 60} Minutes</>
-                    ) : (
-                      <></>
-                    )}
+                    {Employee.first_name + " " + Employee.last_name}
                   </Td>
                   <Td>
-                    <ActionsMenu type={"TaskResult"} value={TaskResult} />
+                    <ActionsMenu type={"Employee"} value={Employee} />
                   </Td>
                 </Tr>
               ))}
@@ -172,13 +126,13 @@ function TaskResultsTable() {
   );
 }
 
-function TaskResults() {
+function Employees() {
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
-        Task Results
+        Employee Management
       </Heading>
-      <TaskResultsTable />
+      <EmployeesTable />
     </Container>
   );
 }

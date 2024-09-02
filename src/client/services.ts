@@ -58,7 +58,7 @@ export class LoginService {
     const { formData } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: ":8000/api/auth/token/",
+      url: "/api/auth/token/",
       formData: formData,
       mediaType: "application/x-www-form-urlencoded",
       errors: {
@@ -72,7 +72,7 @@ export class LoginService {
   ): CancelablePromise<TDataLoginRefreshAccessToken> {
     return __request(OpenAPI, {
       method: "POST",
-      url: ":8000/api/auth/token/refresh/",
+      url: "/api/auth/token/refresh/",
       formData: data,
       mediaType: "application/x-www-form-urlencoded",
       errors: {
@@ -199,17 +199,17 @@ export type TDataSearchUser = {
 export class UsersService {
   /**
    * Read Users
-   * Retrieve users.
+   * Retrieve employees.
    * @returns UsersPublic Successful Response
    * @throws ApiError
    */
-  public static readUsers(
+  public static readEmployees(
     data: TDataReadUsers = {}
   ): CancelablePromise<UsersPublic> {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/users/",
+      url: "/api/company/employees/",
       query: {
         skip,
         limit,
@@ -226,13 +226,13 @@ export class UsersService {
    * @returns UserPublic Successful Response
    * @throws ApiError
    */
-  public static createUser(
+  public static createEmployee(
     data: TDataCreateUser
   ): CancelablePromise<UserPublic> {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/users/",
+      url: "/api/company/employees/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -250,7 +250,7 @@ export class UsersService {
   public static readUserMe(): CancelablePromise<UserPublic> {
     return __request(OpenAPI, {
       method: "GET",
-      url: ":8000/api/auth/user/me/",
+      url: "/api/auth/user/me/",
     });
   }
 
@@ -263,7 +263,7 @@ export class UsersService {
   public static deleteUserMe(): CancelablePromise<Message> {
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/v1/users/me",
+      url: "/api/company/employees/me",
     });
   }
 
@@ -279,7 +279,7 @@ export class UsersService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "PATCH",
-      url: "/api/v1/users/me",
+      url: "/api/company/employees/me",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -300,7 +300,7 @@ export class UsersService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "PATCH",
-      url: ":8000/api/auth/user/change_password/",
+      url: "/api/auth/user/change_password/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -321,31 +321,9 @@ export class UsersService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/users/signup",
+      url: "/api/company/employees/signup",
       body: requestBody,
       mediaType: "application/json",
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  /**
-   * Read User By Id
-   * Get a specific user by id.
-   * @returns UserPublic Successful Response
-   * @throws ApiError
-   */
-  public static readUserById(
-    data: TDataReadUserById
-  ): CancelablePromise<UserPublic> {
-    const { userId } = data;
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/api/v1/users/{user_id}",
-      path: {
-        user_id: userId,
-      },
       errors: {
         422: "Validation Error",
       },
@@ -364,7 +342,7 @@ export class UsersService {
     const { requestBody, userId } = data;
     return __request(OpenAPI, {
       method: "PATCH",
-      url: "/api/v1/users/{user_id}",
+      url: "/api/company/employees/{user_id}",
       path: {
         user_id: userId,
       },
@@ -386,7 +364,7 @@ export class UsersService {
     const { userId } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/v1/users/{user_id}",
+      url: "/api/company/employees/{user_id}",
       path: {
         user_id: userId,
       },
@@ -404,8 +382,7 @@ export class UsersService {
 
     return __request(OpenAPI, {
       method: "POST",
-      url:
-        ":8000/api/company/employees/search/?skip=" + skip + "&limit=" + limit,
+      url: "/api/company/employees/search/?skip=" + skip + "&limit=" + limit,
       body: request_body,
       mediaType: "application/json",
       errors: {
@@ -621,7 +598,7 @@ export class TasksService {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: ":8000/api/harmonise/task/",
+      url: "/api/harmonise/task/",
       query: {
         skip,
         limit,
@@ -644,7 +621,7 @@ export class TasksService {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: ":8000/api/harmonise/task/manager/",
+      url: "/api/harmonise/task/manager/",
       query: {
         skip,
         limit,
@@ -661,7 +638,7 @@ export class TasksService {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: ":8000/api/harmonise/task/manager/",
+      url: "/api/harmonise/task/manager/",
       query: {
         skip,
         limit,
@@ -685,7 +662,7 @@ export class TasksService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: ":8000/api/harmonise/task/manager/",
+      url: "/api/harmonise/task/manager/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -704,7 +681,7 @@ export class TasksService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: ":8000/api/harmonise/task/{id}",
+      url: "/api/harmonise/task/{id}",
       path: {
         id,
       },
@@ -726,7 +703,7 @@ export class TasksService {
     const { id, requestBody } = data;
     return __request(OpenAPI, {
       method: "PUT",
-      url: ":8000/api/harmonise/task/manager/{id}/",
+      url: "/api/harmonise/task/manager/{id}/",
       path: {
         id,
       },
@@ -748,7 +725,7 @@ export class TasksService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: ":8000/api/harmonise/task/manager/{id}/",
+      url: "/api/harmonise/task/manager/{id}/",
       path: {
         id,
       },
@@ -770,7 +747,7 @@ export class TasksService {
     return __request(OpenAPI, {
       method: "POST",
       url:
-        ":8000/api/harmonise/task_user/file/?task_id=" +
+        "/api/harmonise/task_user/file/?task_id=" +
         task_id +
         "&field_id=" +
         field_id,
@@ -794,7 +771,7 @@ export class TasksService {
   ): CancelablePromise<Message> {
     return __request(OpenAPI, {
       method: "PUT",
-      url: ":8000/api/harmonise/task_user/text/",
+      url: "/api/harmonise/task_user/text/",
       errors: {
         422: "Validation Error",
       },
@@ -808,7 +785,7 @@ export class TasksService {
     const { task_id } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: ":8000/api/harmonise/task_user/complete/?task_id=" + task_id,
+      url: "/api/harmonise/task_user/complete/?task_id=" + task_id,
       errors: {
         422: "Validation Error",
       },
@@ -819,7 +796,7 @@ export class TasksService {
   public static assignTask(data: TDataAssignTask): CancelablePromise<Message> {
     return __request(OpenAPI, {
       method: "POST",
-      url: ":8000/api/harmonise/task/manager/assign_task/",
+      url: "/api/harmonise/task/manager/assign_task/",
       body: data,
       mediaType: "application/json",
       errors: {
