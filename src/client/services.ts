@@ -10,6 +10,10 @@ import type {
   ItemsPublic,
   Message,
   NewPassword,
+  TargetGroupCreate,
+  TargetGroupPublic,
+  TargetGroupUpdate,
+  TargetGroupsPublic,
   TaskCreate,
   TaskPublic,
   TaskUpdate,
@@ -670,6 +674,140 @@ export class TeamsService {
     return __request(OpenAPI, {
       method: "DELETE",
       url: "/api/company/teams/{id}",
+      path: {
+        id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+}
+
+("Bitiş");
+
+export type TDataReadTargetGroups = {
+  limit?: number;
+  skip?: number;
+};
+export type TDataCreateTargetGroup = {
+  requestBody: TargetGroupCreate;
+};
+export type TDataReadTargetGroup = {
+  id: string;
+};
+export type TDataUpdateTargetGroup = {
+  id: string;
+  requestBody: TargetGroupUpdate;
+};
+export type TDataDeleteTargetGroup = {
+  id: string;
+};
+
+export class TargetGroupsService {
+  /**
+   * Read TargetGroups
+   * Retrieve items.
+   * @returns TargetGroupsPublic Successful Response
+   * @throws ApiError
+   */
+  public static readTargetGroups(
+    data: TDataReadTargetGroups = {}
+  ): CancelablePromise<TargetGroupsPublic> {
+    const { limit = 100, skip = 0 } = data;
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/company/target_groups/",
+      query: {
+        skip,
+        limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Create TargetGroup
+   * Create new item.
+   * @returns TargetGroupPublic Successful Response
+   * @throws ApiError
+   */
+  public static createTargetGroup(
+    data: TDataCreateTargetGroup
+  ): CancelablePromise<TargetGroupPublic> {
+    const { requestBody } = data;
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/company/target_groups/",
+      body: requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Read TargetGroup
+   * Get item by ID.
+   * @returns TargetGroupPublic Successful Response
+   * @throws ApiError
+   */
+  public static readTargetGroup(
+    data: TDataReadTargetGroup
+  ): CancelablePromise<TargetGroupPublic> {
+    const { id } = data;
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/company/target_groups/{id}",
+      path: {
+        id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Update TargetGroup
+   * Update an item.
+   * @returns TargetGroupPublic Successful Response
+   * @throws ApiError
+   */
+  public static updateTargetGroup(
+    data: TDataUpdateTargetGroup
+  ): CancelablePromise<TargetGroupPublic> {
+    const { id, requestBody } = data;
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/company/target_groups/{id}",
+      path: {
+        id,
+      },
+      body: requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Delete TargetGroup
+   * Delete an item.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static deleteTargetGroup(
+    data: TDataDeleteTargetGroup
+  ): CancelablePromise<Message> {
+    const { id } = data;
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/company/target_groups/{id}",
       path: {
         id,
       },

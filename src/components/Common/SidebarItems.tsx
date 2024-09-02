@@ -25,6 +25,7 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
   let finalItems = currentUser?.is_manager
     ? [
         ...items,
+        { icon: FiUsers, title: "Group Management", path: "/target_groups" },
         { icon: FiUsers, title: "User Management", path: "/employees" },
         { icon: FiUsers, title: "Team Management", path: "/teams" },
         { icon: FiBriefcase, title: "Task Management", path: "/tasks" },

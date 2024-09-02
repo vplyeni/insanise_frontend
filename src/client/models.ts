@@ -49,6 +49,26 @@ export type TeamsPublic = {
   count: number;
 };
 
+export type TargetGroupBase = {
+  id: number;
+  name: string;
+  description: string;
+  created_at: string | null;
+  updated_at: string | null;
+  company: number;
+};
+
+export type TargetGroupCreate = TargetGroupBase;
+
+export type TargetGroupPublic = TargetGroupBase;
+
+export type TargetGroupUpdate = TargetGroupBase;
+
+export type TargetGroupsPublic = {
+  data: Array<TargetGroupPublic>;
+  count: number;
+};
+
 export type Message = {
   message: string;
 };
