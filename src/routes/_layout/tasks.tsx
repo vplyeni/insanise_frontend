@@ -79,7 +79,6 @@ function TasksTable() {
             <Tr>
               <Th>Name</Th>
               <Th>Description</Th>
-              <Th>Status</Th>
               <Th>Duration</Th>
               <Th>Actions</Th>
             </Tr>
@@ -108,7 +107,6 @@ function TasksTable() {
                   >
                     {Task.description || "N/A"}
                   </Td>
-                  <Td>{Task.status}</Td>
                   <Td>
                     {Task.task_period > 1440 ? (
                       <>

@@ -78,7 +78,6 @@ function TaskResultsTable() {
             <Tr>
               <Th>Name</Th>
               <Th>Description</Th>
-              <Th>Status</Th>
               <Th>Duration</Th>
               <Th>Actions</Th>
             </Tr>
@@ -107,7 +106,6 @@ function TaskResultsTable() {
                   >
                     {TaskResult.description || "N/A"}
                   </Td>
-                  <Td>{TaskResult.status}</Td>
                   <Td>
                     {TaskResult.task_period > 1440 ? (
                       <>
