@@ -237,10 +237,9 @@ const AddTaskModal = ({ isOpen, onClose }: AddTaskProps) => {
               >
                 <option value="plain_text">Plain Text</option>
                 <option value="long_text">Long Text</option>
-                <option value="file-png,jpeg,jpg">Photo</option>
-                <option value="file-zip">Zip</option>
-                <option value="file-pdf">Pdf</option>
-                <option value="file">File</option>
+                <option value="file-png,jpeg,jpg.">Photo</option>
+                <option value="file-zip.">Zip</option>
+                <option value="file-pdf.">Pdf</option>
               </Select>
               <Button
                 style={{

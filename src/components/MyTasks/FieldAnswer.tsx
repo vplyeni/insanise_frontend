@@ -8,9 +8,15 @@ import {
   Textarea,
   Spinner,
 } from "@chakra-ui/react";
-import { TaskField, TasksService, TDataFileForField } from "../../client";
+import {
+  ApiError,
+  TaskField,
+  TasksService,
+  TDataFileForField,
+} from "../../client";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import useCustomToast from "../../hooks/useCustomToast";
 interface FieldAnswer {
   task_id: string;
   field: TaskField;
@@ -47,6 +53,7 @@ const FieldAnswer = ({
   const [name, setName] = useState(field.represented_name);
   const [inputValue, setInputValue] = useState(field.content);
   const [debouncedValue, setDebouncedValue] = useState(inputValue);
+  const showToast = useCustomToast();
 
   const baseStyle = {
     paddingTop: "10px",
@@ -116,9 +123,6 @@ const FieldAnswer = ({
       }),
     retry: 3,
     onSuccess: (result: any, variables, context) => {
-      console.log(result);
-
-      console.log(to_date_string(new Date(result.updated_at)));
       setDateString(to_date_string(new Date(result.updated_at)));
       setIsLoading(false);
     },
@@ -200,7 +204,13 @@ const FieldAnswer = ({
             fontSize="sm"
             color="gray.500"
           >
-            {field.name}
+            {field.name} (
+            {field.type
+              .replace("file-", " ")
+              .split(",")
+              .join(", ")
+              .replace(".", " ")}
+            )
           </FormLabel>
           <Flex alignItems="center">
             <Input
@@ -224,15 +234,30 @@ const FieldAnswer = ({
                     task_id: task_id,
                     field_id: field.id,
                     file: input.target.files[0],
-                  } as TDataFileForField).then((res: any) => {
-                    field.content = res.name;
-                    field.represented_name = res.represent_name;
-                    setName(res.represent_name);
-                    console.log(res);
+                  } as TDataFileForField)
+                    .then((res: any) => {
+                      field.content = res.name;
+                      field.represented_name = res.represent_name;
+                      setName(res.represent_name);
+                      console.log(res);
 
-                    setDateString(to_date_string(new Date(res.updated_at)));
-                    setIsLoading(false);
-                  });
+                      setDateString(to_date_string(new Date(res.updated_at)));
+                      setIsLoading(false);
+                    })
+                    .catch((err: ApiError) => {
+                      setIsLoading(false);
+                      console.log(err.status);
+
+                      if (err.status === 406) {
+                        showToast(
+                          "Error",
+                          "File type is not supported for this field.",
+                          "error"
+                        );
+                      } else {
+                        console.log(err);
+                      }
+                    });
                 }
               }}
             />

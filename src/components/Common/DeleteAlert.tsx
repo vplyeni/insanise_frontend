@@ -61,8 +61,18 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
       );
     },
     onSettled: () => {
+      let item = "";
+      if (type === "Item") {
+        item = "items";
+      } else if (type === "User") {
+        item = "users";
+      } else if (type === "Task") {
+        item = "tasks";
+      } else {
+        throw new Error(`Unexpected type: ${type}`);
+      }
       queryClient.invalidateQueries({
-        queryKey: [type === "tasks"],
+        queryKey: [item],
       });
     },
   });
