@@ -23,6 +23,7 @@ import { Route as LayoutTaskresultsImport } from './routes/_layout/task_results'
 import { Route as LayoutTargetgroupsImport } from './routes/_layout/target_groups'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutMytasksImport } from './routes/_layout/my_tasks'
+import { Route as LayoutMyleavesImport } from './routes/_layout/my_leaves'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
 import { Route as LayoutEmployeesImport } from './routes/_layout/employees'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
@@ -89,6 +90,11 @@ const LayoutMytasksRoute = LayoutMytasksImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutMyleavesRoute = LayoutMyleavesImport.update({
+  path: '/my_leaves',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutItemsRoute = LayoutItemsImport.update({
   path: '/items',
   getParentRoute: () => LayoutRoute,
@@ -140,6 +146,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutItemsImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/my_leaves': {
+      preLoaderRoute: typeof LayoutMyleavesImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/my_tasks': {
       preLoaderRoute: typeof LayoutMytasksImport
       parentRoute: typeof LayoutImport
@@ -178,6 +188,7 @@ export const routeTree = rootRoute.addChildren([
     LayoutAdminRoute,
     LayoutEmployeesRoute,
     LayoutItemsRoute,
+    LayoutMyleavesRoute,
     LayoutMytasksRoute,
     LayoutSettingsRoute,
     LayoutTargetgroupsRoute,

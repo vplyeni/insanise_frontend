@@ -200,3 +200,24 @@ export type TaskUsersPublic = {
   data: Array<TaskUserPublic>;
   count: number;
 };
+
+export type LeaveBase = {
+  start_date: string;
+  end_date: string;
+  description: string;
+  total_days: number;
+  status: string;
+  user: number;
+  manager_user: number;
+};
+
+export type LeaveCreate = LeaveBase;
+
+export type LeavePublic = LeaveBase;
+
+export type LeaveUpdate = LeaveCreate;
+
+export type LeavesPublic = {
+  data: Array<LeavePublic>;
+  count: number;
+};
