@@ -32,6 +32,7 @@ import ApproveLeave from "../Leaves/ApproveLeave";
 import { Target } from "framer-motion";
 import EditTargetGroup from "../TargetGroups/EditTargetGroup";
 import EditTeam from "../Teams/EditTeam";
+import EditEmployee from "../Employees/EditEmployee";
 
 interface ActionsMenuProps {
   type: string;
@@ -100,6 +101,13 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
         {type === "User" && (
           <EditUser
             user={value as UserPublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
+        )}
+        {type === "Employee" && (
+          <EditEmployee
+            item={value as UserPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />

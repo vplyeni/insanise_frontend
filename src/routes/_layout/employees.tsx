@@ -76,6 +76,8 @@ function EmployeesTable() {
           <Thead>
             <Tr>
               <Th>Name</Th>
+              <Th>Position</Th>
+              <Th>Department</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -95,6 +97,12 @@ function EmployeesTable() {
                 <Tr key={index} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td isTruncated maxWidth="150px">
                     {Employee.first_name + " " + Employee.last_name}
+                  </Td>
+                  <Td isTruncated maxWidth="150px">
+                    {Employee.position}
+                  </Td>
+                  <Td isTruncated maxWidth="150px">
+                    {Employee.department}
                   </Td>
                   <Td>
                     <ActionsMenu type={"Employee"} value={Employee} />

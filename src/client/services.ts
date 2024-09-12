@@ -244,7 +244,7 @@ export class UsersService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/company/employees/",
+      url: "/api/company/employees/create_employee/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -354,7 +354,7 @@ export class UsersService {
     const { requestBody, userId } = data;
     return __request(OpenAPI, {
       method: "PATCH",
-      url: "/api/company/employees/{user_id}",
+      url: "/api/company/employees/{user_id}/",
       path: {
         user_id: userId,
       },
@@ -376,7 +376,7 @@ export class UsersService {
     const { userId } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/company/employees/{user_id}",
+      url: "/api/company/employees/{user_id}/",
       path: {
         user_id: userId,
       },

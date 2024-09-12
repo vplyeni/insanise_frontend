@@ -105,6 +105,7 @@ export type UserCreate = {
   is_superuser: boolean;
   is_manager: boolean;
   is_lead: boolean;
+  is_active: boolean;
 };
 
 export type UserPublic = {
@@ -123,6 +124,7 @@ export type UserPublic = {
   is_superuser: boolean;
   is_manager: boolean;
   is_lead: boolean;
+  is_active: boolean;
 };
 
 export type UserRegister = {

@@ -51,6 +51,8 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
       await TeamsService.deleteTeam({ id: id });
     } else if (type === "TargetGroup") {
       await TargetGroupsService.deleteTargetGroup({ id: id });
+    } else if (type === "Employee") {
+      await UsersService.deleteUser({ userId: id });
     } else {
       throw new Error(`Unexpected type: ${type}`);
     }
@@ -89,6 +91,8 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
         item = "target_groups";
       } else if (type === "Team") {
         item = "teams";
+      } else if (type === "Employee") {
+        item = "employees";
       } else {
         throw new Error(`Unexpected type: ${type}`);
       }

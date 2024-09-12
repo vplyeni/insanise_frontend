@@ -101,7 +101,13 @@ function MyLeavesTable() {
                   key={index}
                   borderRadius={"5px"}
                   backgroundColor={
-                    Leave.status === "Offered" ? "#FF000030" : "#FF000000"
+                    Leave.status === "Offered"
+                      ? "#FFFF0010"
+                      : Leave.status === "Approved"
+                        ? "#00FF0010"
+                        : Leave.status === "Declined"
+                          ? "#FF000010"
+                          : "#00000000"
                   }
                   opacity={isPlaceholderData ? 0.5 : 1}
                 >

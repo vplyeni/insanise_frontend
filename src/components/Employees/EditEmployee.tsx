@@ -18,22 +18,36 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
-import { type ApiError, type UserCreate, UsersService } from "../../client";
+import {
+  type ApiError,
+  type UserCreate,
+  UserPublic,
+  UsersService,
+} from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 import { handleError } from "../../utils";
 import { useState } from "react";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
+import { it } from "node:test";
 
-interface AddEmployeeProps {
+interface EditEmployeeProps {
+  item: UserPublic;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AddEmployee = ({ isOpen, onClose }: AddEmployeeProps) => {
+const EditEmployee = ({ item, isOpen, onClose }: EditEmployeeProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const [username, setUsername] = useState("");
-  const [date, setDate] = useState<Date>(new Date());
+
+  let new_date = new Date();
+
+  if (item.date_of_birth) {
+    new_date = new Date(item.date_of_birth);
+  }
+
+  const [date, setDate] = useState<Date>(new_date);
   const {
     register,
     handleSubmit,
@@ -43,14 +57,21 @@ const AddEmployee = ({ isOpen, onClose }: AddEmployeeProps) => {
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
-      first_name: "",
-      last_name: "",
+      username: item.username,
+      first_name: item.first_name,
+      last_name: item.last_name,
+      email: item.email,
+      position: item.position,
+      department: item.department,
+      is_active: item.is_active,
+      is_manager: item.is_manager,
+      is_lead: item.is_lead,
     },
   });
 
   const mutation = useMutation({
     mutationFn: (data: UserCreate) =>
-      UsersService.createEmployee({ requestBody: data }),
+      UsersService.updateUser({ userId: data.id + "", requestBody: data }),
     onSuccess: () => {
       showToast("Success!", "Employee created successfully.", "success");
       reset();
@@ -66,6 +87,7 @@ const AddEmployee = ({ isOpen, onClose }: AddEmployeeProps) => {
 
   const onSubmit: SubmitHandler<UserCreate> = (data) => {
     console.log(data);
+    data.id = item.id;
     data.date_of_birth = date.toISOString().split("T")[0];
     mutation.mutate(data);
   };
@@ -80,7 +102,7 @@ const AddEmployee = ({ isOpen, onClose }: AddEmployeeProps) => {
       >
         <ModalOverlay />
         <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader>Add Employee</ModalHeader>
+          <ModalHeader>Edit Employee</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl
@@ -275,4 +297,4 @@ const AddEmployee = ({ isOpen, onClose }: AddEmployeeProps) => {
   );
 };
 
-export default AddEmployee;
+export default EditEmployee;
