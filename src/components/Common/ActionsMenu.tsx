@@ -11,6 +11,7 @@ import { FiCornerDownRight, FiEdit, FiTrash } from "react-icons/fi";
 
 import type {
   ItemPublic,
+  LeavePublic,
   TaskBase,
   TaskPublic,
   TaskUserPublic,
@@ -23,16 +24,20 @@ import Delete from "./DeleteAlert";
 import EditTask from "../Task/EditTask";
 import AnswerMyTask from "../MyTasks/AnswerMyTask";
 import AssignTask from "../Task/AssignTask";
+import EditMyLeave from "../MyLeaves/EditMyLeave";
+import EditLeave from "../Leaves/EditLeave";
+import ApproveLeave from "../Leaves/ApproveLeave";
 
 interface ActionsMenuProps {
   type: string;
-  value: ItemPublic | UserPublic | TaskBase;
+  value: ItemPublic | UserPublic | TaskBase | LeavePublic | TaskUserPublic;
   disabled?: boolean;
 }
 
 const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const editUserModal = useDisclosure();
   const assignTaskModal = useDisclosure();
+  const approveLeaveModal = useDisclosure();
   const deleteModal = useDisclosure();
 
   console.log(type);
@@ -71,12 +76,35 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
               Delete {type}
             </MenuItem>
           )}
+          {type === "Leaves" && (
+            <MenuItem
+              onClick={approveLeaveModal.onOpen}
+              icon={<FiEdit fontSize="16px" />}
+              color="ui.primary"
+            >
+              Approve Leave
+            </MenuItem>
+          )}
         </MenuList>
         {type === "User" && (
           <EditUser
             user={value as UserPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
+          />
+        )}
+        {type === "Leaves" && (
+          <EditLeave
+            item={value as LeavePublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
+        )}
+        {type === "Leaves" && (
+          <ApproveLeave
+            item={value as LeavePublic}
+            isOpen={approveLeaveModal.isOpen}
+            onClose={approveLeaveModal.onClose}
           />
         )}
         {type === "MyTasks" && (
@@ -92,6 +120,13 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           ></EditTask>
+        )}
+        {type === "MyLeaves" && (
+          <EditMyLeave
+            item={value as LeavePublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
         )}
         {type === "Task" && (
           <AssignTask

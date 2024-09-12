@@ -111,6 +111,7 @@ export type UserPublic = {
   team: number | null;
   is_superuser: boolean;
   is_manager: boolean;
+  is_lead: boolean;
 };
 
 export type UserRegister = {
@@ -202,13 +203,14 @@ export type TaskUsersPublic = {
 };
 
 export type LeaveBase = {
+  id?: number;
   start_date: string;
   end_date: string;
   description: string;
-  total_days: number;
-  status: string;
-  user: number;
-  manager_user: number;
+  total_days?: number;
+  status?: string;
+  user?: number;
+  manager_user?: number;
 };
 
 export type LeaveCreate = LeaveBase;

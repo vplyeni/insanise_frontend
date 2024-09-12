@@ -8,6 +8,7 @@ import type { UserPublic } from "../../client";
 const items = [
   { icon: FiHome, title: "Dashboard", path: "/" },
   { icon: FiBriefcase, title: "My Tasks", path: "/my_tasks" },
+  { icon: FiBriefcase, title: "My Leaves", path: "/my_leaves" },
 ];
 
 interface SidebarItemsProps {
@@ -22,7 +23,7 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
 
   console.log(currentUser);
 
-  let finalItems = currentUser?.is_manager
+  const items1 = currentUser?.is_manager
     ? [
         ...items,
         { icon: FiUsers, title: "Group Management", path: "/target_groups" },
@@ -37,10 +38,17 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
     ? [...finalItems, { icon: FiUsers, title: "Admin", path: "/admin" }]
     : finalItems
   */
-  finalItems = [
-    ...finalItems,
-    { icon: FiSettings, title: "User Settings", path: "/settings" },
-  ];
+  const finalItems = currentUser?.is_lead
+    ? [
+        ...items1,
+        { icon: FiUsers, title: "Leaves Management", path: "/leaves" },
+        { icon: FiSettings, title: "User Settings", path: "/settings" },
+      ]
+    : [
+        ...items1,
+        { icon: FiSettings, title: "User Settings", path: "/settings" },
+      ];
+
   const listItems = finalItems.map(({ icon, title, path }) => (
     <Flex
       as={Link}

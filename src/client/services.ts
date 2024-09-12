@@ -1082,7 +1082,7 @@ export type TDataReadLeave = {
 };
 export type TDataUpdateLeave = {
   id: string;
-  requestBody: LeavesPublic;
+  requestBody: LeavePublic;
 };
 export type TDataDeleteLeave = {
   id: string;
@@ -1122,7 +1122,7 @@ export class LeavesService {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/harmonise/task/",
+      url: "/api/company/leave/",
       query: {
         skip,
         limit,
@@ -1145,28 +1145,10 @@ export class LeavesService {
     const { limit = 100, skip = 0 } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/harmonise/task/manager/",
+      url: "/api/company/leave/waiting_for_approve/",
       query: {
         skip,
         limit,
-      },
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  public static readLeaveResults(
-    data: TDataReadLeaves = {}
-  ): CancelablePromise<LeavesPublic> {
-    const { limit = 100, skip = 0 } = data;
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/api/harmonise/task/manager/",
-      query: {
-        skip,
-        limit,
-        type: 1,
       },
       errors: {
         422: "Validation Error",
@@ -1186,7 +1168,7 @@ export class LeavesService {
     const { requestBody } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/harmonise/task/manager/",
+      url: "/api/company/leave/",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -1207,7 +1189,7 @@ export class LeavesService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/harmonise/task/{id}",
+      url: "/api/company/leave/{id}",
       path: {
         id,
       },
@@ -1229,7 +1211,7 @@ export class LeavesService {
     const { id, requestBody } = data;
     return __request(OpenAPI, {
       method: "PUT",
-      url: "/api/harmonise/task/manager/{id}/",
+      url: "/api/company/leave/{id}/",
       path: {
         id,
       },
@@ -1253,7 +1235,7 @@ export class LeavesService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/harmonise/task/manager/{id}/",
+      url: "/api/company/leave/{id}/",
       path: {
         id,
       },
@@ -1262,73 +1244,23 @@ export class LeavesService {
       },
     });
   }
-  /**
-   * Alter Field
-   * Alter an item.
-   * @returns Message Successful Response
-   * @throws ApiError
-   */
-  public static addFileToField(
-    data: TDataFileForField
-  ): CancelablePromise<Message> {
-    const { task_id, field_id, file } = data;
-    return __request(OpenAPI, {
-      method: "POST",
-      url:
-        "/api/harmonise/task_user/file/?task_id=" +
-        task_id +
-        "&field_id=" +
-        field_id,
-      errors: {
-        422: "Validation Error",
-      },
-      formData: {
-        file: file,
-      },
-    });
-  }
 
   /**
-   * Alter Field
-   * Alter an item.
-   * @returns Message Successful Response
+   * Read Teams
+   * Retrieve items.
+   * @returns LeavesPublic Successful Response
    * @throws ApiError
    */
-  public static customizeFieldWithLeaveId(
-    data: TDataFieldCustomize
-  ): CancelablePromise<Message> {
-    return __request(OpenAPI, {
-      method: "PUT",
-      url: "/api/harmonise/task_user/text/",
-      errors: {
-        422: "Validation Error",
-      },
-      body: data,
-    });
-  }
-
-  public static completeLeaveByLeaveId(
-    data: TDataCompleteLeave
-  ): CancelablePromise<Message> {
-    const { task_id } = data;
+  public static approveLeave(
+    data: TDataReadLeave = { id: "0" }
+  ): CancelablePromise<LeavesPublic> {
+    const { id } = data;
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/harmonise/task_user/complete/?task_id=" + task_id,
-      errors: {
-        422: "Validation Error",
+      url: "/api/company/leave/approve/",
+      query: {
+        leave_id: id,
       },
-      body: data,
-    });
-  }
-
-  public static assignLeave(
-    data: TDataAssignLeave
-  ): CancelablePromise<Message> {
-    return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/harmonise/task/manager/assign_task/",
-      body: data,
-      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },

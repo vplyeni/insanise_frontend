@@ -13,20 +13,20 @@ import { useForm } from "react-hook-form";
 
 import {
   ItemsService,
+  LeavePublic,
   LeavesService,
   TasksService,
   UsersService,
 } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 
-interface DeleteProps {
-  type: string;
-  id: string;
+interface ApproveLeaveProps {
+  item: LeavePublic;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
+const ApproveLeave = ({ item, isOpen, onClose }: ApproveLeaveProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const cancelRef = React.useRef<HTMLButtonElement | null>(null);
@@ -34,69 +34,32 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm();
-  console.log(type);
-
-  const deleteEntity = async (id: string) => {
-    if (type === "Item") {
-      await ItemsService.deleteItem({ id: id });
-    } else if (type === "User") {
-      await UsersService.deleteUser({ userId: id });
-    } else if (type === "Task") {
-      await TasksService.deleteTask({ id: id });
-    } else if (type === "MyLeaves" || type === "Leave") {
-      await LeavesService.deleteLeave({ id: id });
-    } else {
-      throw new Error(`Unexpected type: ${type}`);
-    }
-  };
 
   const mutation = useMutation({
-    mutationFn: deleteEntity,
+    mutationFn: (id: string) => LeavesService.approveLeave({ id: id }),
     onSuccess: () => {
-      showToast(
-        "Success",
-        `The ${type.toLowerCase()} was deleted successfully.`,
-        "success"
-      );
+      showToast("Success", `The leave was approved successfully.`, "success");
       onClose();
     },
     onError: () => {
       showToast(
         "An error occurred.",
-        `An error occurred while deleting the ${type.toLowerCase()}.`,
+        `An error occurred while approving the leave.`,
         "error"
       );
     },
     onSettled: () => {
-      let item = "";
-      if (type === "Item") {
-        item = "items";
-      } else if (type === "User") {
-        item = "users";
-      } else if (type === "Task") {
-        item = "tasks";
-      } else if (type === "MyLeaves") {
-        item = "my_leaves";
-      } else if (type === "Leave") {
-        item = "leaves";
-      } else {
-        throw new Error(`Unexpected type: ${type}`);
-      }
       queryClient.invalidateQueries({
-        queryKey: [item],
+        queryKey: ["leaves"],
       });
     },
   });
 
   const onSubmit = async () => {
-    mutation.mutate(id);
+    console.log("Approving leave");
+
+    mutation.mutate(item.id + "");
   };
-
-  let type_text = type;
-
-  if (type === "MyLeaves") {
-    type_text = "Leave";
-  }
 
   return (
     <>
@@ -109,21 +72,15 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <AlertDialogHeader>Delete {type_text}</AlertDialogHeader>
+            <AlertDialogHeader>Approve Leave</AlertDialogHeader>
 
             <AlertDialogBody>
-              {type === "User" && (
-                <span>
-                  All items associated with this user will also be{" "}
-                  <strong>permantly deleted. </strong>
-                </span>
-              )}
-              Are you sure? You will not be able to undo this action.
+              Are you sure? You are about to Approve the Leave Request.
             </AlertDialogBody>
 
             <AlertDialogFooter gap={3}>
               <Button variant="danger" type="submit" isLoading={isSubmitting}>
-                Delete
+                Approve
               </Button>
               <Button
                 ref={cancelRef}
@@ -140,4 +97,4 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
   );
 };
 
-export default Delete;
+export default ApproveLeave;

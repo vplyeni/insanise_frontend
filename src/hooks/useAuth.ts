@@ -31,17 +31,19 @@ const useAuth = () => {
     queryFn: async () => {
       let result = {} as UserPublic;
       let i = 0;
-      while (i < 7) {
+      let failed = false;
+      while (i < 3) {
+        i++;
         try {
-          i++;
+          failed = false;
           result = await UsersService.readUserMe();
-          i++;
           break;
         } catch (e) {
+          failed = true;
           await timeout(300);
         }
       }
-      if (i % 2 == 1) {
+      if (failed) {
         if (localStorage.getItem("refresh_token") !== null) {
           const { access } = await LoginService.loginAccessRefresh({
             refresh: localStorage.getItem("refresh_token"),

@@ -17,20 +17,18 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
 
-import { LeavePublic, LeavesService } from "../../client";
+import { LeaveBase, LeavesService } from "../../client";
 import ActionsMenu from "../../components/Common/ActionsMenu";
-import Navbar from "../../components/Common/Navbar";
-import AddLeave from "../../components/MyLeaves/AddLeave";
 //import Navbar from "../../components/Common/Navbar"
 //import AddLeave from "../../components/Leaves/AddLeave"
 
-const MyLeavesSearchSchema = z.object({
+const LeavesSearchSchema = z.object({
   page: z.number().catch(1),
 });
 
-export const Route = createFileRoute("/_layout/my_leaves")({
-  component: MyLeaves,
-  validateSearch: (search) => MyLeavesSearchSchema.parse(search),
+export const Route = createFileRoute("/_layout/leaves")({
+  component: Leaves,
+  validateSearch: (search) => LeavesSearchSchema.parse(search),
 });
 
 const PER_PAGE = 5;
@@ -38,15 +36,15 @@ const PER_PAGE = 5;
 function getLeavesQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      LeavesService.readLeaves({
+      LeavesService.readAllLeaves({
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
-    queryKey: ["my_leaves", { page }],
+    queryKey: ["leaves", { page }],
   };
 }
 
-function MyLeavesTable() {
+function LeavesTable() {
   const queryClient = useQueryClient();
   const { page } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
@@ -77,8 +75,8 @@ function MyLeavesTable() {
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
             <Tr>
+              <Th>Name</Th>
               <Th>Description</Th>
-              <Th>Status</Th>
               <Th>Start Date</Th>
               <Th>End Date</Th>
               <Th>Actions</Th>
@@ -96,30 +94,24 @@ function MyLeavesTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {Leaves?.data.map((Leave: LeavePublic, index: number) => (
-                <Tr
-                  key={index}
-                  borderRadius={"5px"}
-                  backgroundColor={
-                    Leave.status === "Offered" ? "#FF000030" : "#FF000000"
-                  }
-                  opacity={isPlaceholderData ? 0.5 : 1}
-                >
+              {Leaves?.data.map((Leave: LeaveBase) => (
+                <Tr key={Leave.id} opacity={isPlaceholderData ? 0.5 : 1}>
+                  <Td isTruncated maxWidth="150px">
+                    {Leave.description}
+                  </Td>
                   <Td
                     color={!Leave.description ? "ui.dim" : "inherit"}
                     isTruncated
                     maxWidth="150px"
                   >
-                    {Leave.description || "N/A"}
+                    {Leave.status || "N/A"}
                   </Td>
-                  <Td>{Leave.status}</Td>
                   <Td>{Leave.start_date.split("-").reverse().join(".")}</Td>
                   <Td>{Leave.end_date.split("-").reverse().join(".")}</Td>
-
                   <Td>
                     {(Leave.status == "Requested" ||
                       Leave.status == "Offered") && (
-                      <ActionsMenu type={"MyLeaves"} value={Leave} />
+                      <ActionsMenu type={"Leaves"} value={Leave} />
                     )}
                   </Td>
                 </Tr>
@@ -147,14 +139,13 @@ function MyLeavesTable() {
   );
 }
 
-function MyLeaves() {
+function Leaves() {
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
-        My Leaves
+        Leaves Management
       </Heading>
-      <Navbar type={"MyLeave"} addModalAs={AddLeave} />
-      <MyLeavesTable />
+      <LeavesTable />
     </Container>
   );
 }
