@@ -3,6 +3,10 @@ import {
   Container,
   Flex,
   Heading,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
   SkeletonText,
   Table,
   TableContainer,
@@ -14,11 +18,14 @@ import {
 } from "@chakra-ui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { FiSearch, FiX } from "react-icons/fi";
+
 import { useEffect } from "react";
 import { z } from "zod";
 
-import { TaskBase, TasksService } from "../../client";
+import { TaskBase, TaskResultPublic, TasksService } from "../../client";
 import ActionsMenu from "../../components/Common/ActionsMenu";
+import React from "react";
 //import Navbar from "../../components/Common/Navbar"
 //import AddTask from "../../components/Tasks/AddTask"
 
@@ -33,18 +40,29 @@ export const Route = createFileRoute("/_layout/task_results")({
 
 const PER_PAGE = 5;
 
-function getTaskResultsQueryOptions({ page }: { page: number }) {
+function getTaskResultsQueryOptions({
+  page,
+  search,
+}: {
+  page: number;
+  search: string;
+}) {
   return {
     queryFn: () =>
       TasksService.readTaskResults({
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
+        search: search,
       }),
     queryKey: ["task_results", { page }],
   };
 }
 
-function TaskResultsTable() {
+interface TaskResultsProps {
+  searchString: string;
+}
+
+function TaskResultsTable({ searchString }: TaskResultsProps) {
   const queryClient = useQueryClient();
   const { page } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
@@ -56,7 +74,7 @@ function TaskResultsTable() {
     isPending,
     isPlaceholderData,
   } = useQuery({
-    ...getTaskResultsQueryOptions({ page }),
+    ...getTaskResultsQueryOptions({ page, search: searchString }),
     placeholderData: (prevData) => prevData,
   });
 
@@ -66,7 +84,9 @@ function TaskResultsTable() {
 
   useEffect(() => {
     if (hasNextPage) {
-      queryClient.prefetchQuery(getTaskResultsQueryOptions({ page: page + 1 }));
+      queryClient.prefetchQuery(
+        getTaskResultsQueryOptions({ page: page + 1, search: searchString })
+      );
     }
   }, [page, queryClient, hasNextPage]);
 
@@ -76,10 +96,10 @@ function TaskResultsTable() {
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
             <Tr>
+              <Th>User Full Name</Th>
               <Th>Name</Th>
               <Th>Description</Th>
-              <Th>Duration</Th>
-              <Th>Actions</Th>
+              <Th>Due Date</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -94,59 +114,24 @@ function TaskResultsTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {TaskResults?.data.map((TaskResult: TaskBase, index: number) => (
-                <Tr key={index} opacity={isPlaceholderData ? 0.5 : 1}>
-                  <Td isTruncated maxWidth="150px">
-                    {TaskResult.name}
-                  </Td>
-                  <Td
-                    color={!TaskResult.description ? "ui.dim" : "inherit"}
-                    isTruncated
-                    maxWidth="150px"
-                  >
-                    {TaskResult.description || "N/A"}
-                  </Td>
-                  <Td>
-                    {TaskResult.task_period > 1440 ? (
-                      <>
-                        {(
-                          (TaskResult.task_period -
-                            (TaskResult.task_period % 1440)) /
-                          1440
-                        ).toFixed(0)}{" "}
-                        Days
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                    {((TaskResult.task_period - (TaskResult.task_period % 60)) /
-                      60) %
-                    24 ? (
-                      <>
-                        {" "}
-                        {(
-                          ((TaskResult.task_period -
-                            (TaskResult.task_period % 60)) /
-                            60) %
-                          24
-                        ).toFixed(0)}{" "}
-                        Hours
-                      </>
-                    ) : (
-                      <></>
-                    )}
-
-                    {TaskResult.task_period % 60 ? (
-                      <> {TaskResult.task_period % 60} Minutes</>
-                    ) : (
-                      <></>
-                    )}
-                  </Td>
-                  <Td>
-                    <ActionsMenu type={"TaskResult"} value={TaskResult} />
-                  </Td>
-                </Tr>
-              ))}
+              {TaskResults?.data.map(
+                (TaskResult: TaskResultPublic, index: number) => (
+                  <Tr key={index} opacity={isPlaceholderData ? 0.5 : 1}>
+                    <Td>{TaskResult.user_full_name}</Td>
+                    <Td isTruncated maxWidth="150px">
+                      {TaskResult.name}
+                    </Td>
+                    <Td
+                      color={!TaskResult.description ? "ui.dim" : "inherit"}
+                      isTruncated
+                      maxWidth="150px"
+                    >
+                      {TaskResult.description || "N/A"}
+                    </Td>
+                    <Td>{TaskResult.due_date}</Td>
+                  </Tr>
+                )
+              )}
             </Tbody>
           )}
         </Table>
@@ -171,12 +156,46 @@ function TaskResultsTable() {
 }
 
 function TaskResults() {
+  const [search, setSearch] = React.useState("");
+  const queryClient = useQueryClient();
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
         Task Results
       </Heading>
-      <TaskResultsTable />
+      <Flex marginTop={"10px"} width={"300px"}>
+        <InputGroup size="md">
+          <Input
+            value={search}
+            pr="4.5rem"
+            type={"text"}
+            placeholder="User Full Name"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <InputRightElement justifyContent={"right"} width="4.5rem">
+            <IconButton
+              background={"#ff000000"}
+              _hover={{ background: "#ff000000" }}
+              aria-label=""
+              margin={"0px"}
+              onClick={() => {
+                queryClient.invalidateQueries({ queryKey: ["task_results"] });
+                setSearch("");
+              }}
+              icon={<FiX />}
+            ></IconButton>
+          </InputRightElement>
+        </InputGroup>
+        <IconButton
+          marginLeft={"5px"}
+          aria-label=""
+          icon={<FiSearch />}
+          onClick={() =>
+            queryClient.invalidateQueries({ queryKey: ["task_results"] })
+          }
+        ></IconButton>
+      </Flex>
+      <TaskResultsTable searchString={search} />
     </Container>
   );
 }

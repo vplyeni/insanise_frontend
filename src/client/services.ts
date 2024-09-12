@@ -20,6 +20,7 @@ import type {
   TargetGroupsPublic,
   TaskCreate,
   TaskPublic,
+  TaskResultsPublic,
   TaskUpdate,
   TaskUserPublic,
   TaskUsersPublic,
@@ -825,6 +826,7 @@ export class TargetGroupsService {
 export type TDataReadTasks = {
   limit?: number;
   skip?: number;
+  search?: string;
 };
 export type TDataCreateTask = {
   requestBody: TaskCreate;
@@ -898,8 +900,8 @@ export class TasksService {
 
   public static readTaskResults(
     data: TDataReadTasks = {}
-  ): CancelablePromise<TasksPublic> {
-    const { limit = 100, skip = 0 } = data;
+  ): CancelablePromise<TaskResultsPublic> {
+    const { limit = 100, skip = 0, search = "" } = data;
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/harmonise/task/manager/",
@@ -907,6 +909,7 @@ export class TasksService {
         skip,
         limit,
         type: 1,
+        full_name: search,
       },
       errors: {
         422: "Validation Error",

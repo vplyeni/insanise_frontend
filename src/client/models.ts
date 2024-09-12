@@ -180,6 +180,26 @@ export type TaskBase = {
   status: string;
 };
 
+export type TaskResultPublic = {
+  task_id: string;
+  user_id: number;
+  user_full_name: string;
+  username: string;
+  name: string;
+  description: string;
+  fields: TaskUserPublic[];
+  status: string;
+  company_id: number;
+  updated_by: number;
+  created_by: number;
+  due_date: string;
+};
+
+export type TaskResultsPublic = {
+  data: Array<TaskResultPublic>;
+  count: number;
+};
+
 export type TaskCreate = TaskBase;
 
 export type TaskPublic = TaskBase;
