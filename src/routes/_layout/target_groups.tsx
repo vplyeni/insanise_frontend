@@ -17,9 +17,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
 
-import { TargetGroupBase, TargetGroupsService } from "../../client";
+import { TargetGroupPublic, TargetGroupsService } from "../../client";
 import Navbar from "../../components/Common/Navbar";
 import ActionsMenu from "../../components/Common/ActionsMenu";
+import AddTargetGroup from "../../components/TargetGroups/AddTargetGroup";
 //import Navbar from "../../components/Common/Navbar"
 //import AddTargetGroup from "../../components/TargetGroups/AddTargetGroup"
 
@@ -41,7 +42,7 @@ function getTargetGroupsQueryOptions({ page }: { page: number }) {
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
-    queryKey: ["teams", { page }],
+    queryKey: ["target_groups", { page }],
   };
 }
 
@@ -96,7 +97,7 @@ function TargetGroupsTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {TargetGroups?.data.map((TargetGroup: TargetGroupBase) => (
+              {TargetGroups?.data.map((TargetGroup: TargetGroupPublic) => (
                 <Tr key={TargetGroup.id} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td isTruncated maxWidth="150px">
                     {TargetGroup.name}
@@ -142,6 +143,7 @@ function TargetGroups() {
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
         Target Groups Management
       </Heading>
+      <Navbar type={"TargetGroups"} addModalAs={AddTargetGroup} />
       <TargetGroupsTable />
     </Container>
   );

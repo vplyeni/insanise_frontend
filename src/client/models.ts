@@ -50,17 +50,18 @@ export type TeamsPublic = {
 };
 
 export type TargetGroupBase = {
-  id: number;
   name: string;
   description: string;
-  created_at: string | null;
-  updated_at: string | null;
-  company: number;
 };
 
 export type TargetGroupCreate = TargetGroupBase;
 
-export type TargetGroupPublic = TargetGroupBase;
+export type TargetGroupPublic = TargetGroupBase & {
+  id: number;
+  created_at: string | null;
+  updated_at: string | null;
+  company: number;
+};
 
 export type TargetGroupUpdate = TargetGroupBase;
 
@@ -89,11 +90,21 @@ export type UpdatePassword = {
 };
 
 export type UserCreate = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
   email: string;
-  is_active?: boolean;
-  is_superuser?: boolean;
-  full_name?: string | null;
-  password: string;
+  position: string | null;
+  department: string | null;
+  date_of_birth: string | null;
+  company: number | null;
+  target_group: number | null;
+  team: number | null;
+  is_superuser: boolean;
+  is_manager: boolean;
+  is_lead: boolean;
 };
 
 export type UserPublic = {

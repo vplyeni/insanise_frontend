@@ -12,9 +12,11 @@ import { FiCornerDownRight, FiEdit, FiTrash } from "react-icons/fi";
 import type {
   ItemPublic,
   LeavePublic,
+  TargetGroupPublic,
   TaskBase,
   TaskPublic,
   TaskUserPublic,
+  TeamUpdate,
   UserPublic,
 } from "../../client";
 import EditUser from "../Admin/EditUser";
@@ -27,10 +29,19 @@ import AssignTask from "../Task/AssignTask";
 import EditMyLeave from "../MyLeaves/EditMyLeave";
 import EditLeave from "../Leaves/EditLeave";
 import ApproveLeave from "../Leaves/ApproveLeave";
+import { Target } from "framer-motion";
+import EditTargetGroup from "../TargetGroups/EditTargetGroup";
+import EditTeam from "../Teams/EditTeam";
 
 interface ActionsMenuProps {
   type: string;
-  value: ItemPublic | UserPublic | TaskBase | LeavePublic | TaskUserPublic;
+  value:
+    | ItemPublic
+    | UserPublic
+    | TaskBase
+    | LeavePublic
+    | TargetGroupPublic
+    | TaskUserPublic;
   disabled?: boolean;
 }
 
@@ -124,6 +135,20 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
         {type === "MyLeaves" && (
           <EditMyLeave
             item={value as LeavePublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
+        )}
+        {type === "TargetGroup" && (
+          <EditTargetGroup
+            item={value as TargetGroupPublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
+        )}
+        {type === "Team" && (
+          <EditTeam
+            item={value as TeamUpdate}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />

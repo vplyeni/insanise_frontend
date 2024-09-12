@@ -20,6 +20,7 @@ import { z } from "zod";
 import { TeamBase, TeamsService } from "../../client";
 import Navbar from "../../components/Common/Navbar";
 import ActionsMenu from "../../components/Common/ActionsMenu";
+import AddTeam from "../../components/Teams/AddTeam";
 //import Navbar from "../../components/Common/Navbar"
 //import AddTeam from "../../components/Teams/AddTeam"
 
@@ -139,6 +140,7 @@ function Teams() {
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
         Teams Management
       </Heading>
+      <Navbar type={"Teams"} addModalAs={AddTeam} />
       <TeamsTable />
     </Container>
   );

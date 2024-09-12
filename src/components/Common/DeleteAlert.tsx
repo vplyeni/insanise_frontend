@@ -14,7 +14,9 @@ import { useForm } from "react-hook-form";
 import {
   ItemsService,
   LeavesService,
+  TargetGroupsService,
   TasksService,
+  TeamsService,
   UsersService,
 } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
@@ -45,6 +47,10 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
       await TasksService.deleteTask({ id: id });
     } else if (type === "MyLeaves" || type === "Leave") {
       await LeavesService.deleteLeave({ id: id });
+    } else if (type === "Team") {
+      await TeamsService.deleteTeam({ id: id });
+    } else if (type === "TargetGroup") {
+      await TargetGroupsService.deleteTargetGroup({ id: id });
     } else {
       throw new Error(`Unexpected type: ${type}`);
     }
@@ -79,6 +85,10 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
         item = "my_leaves";
       } else if (type === "Leave") {
         item = "leaves";
+      } else if (type === "TargetGroup") {
+        item = "target_groups";
+      } else if (type === "Team") {
+        item = "teams";
       } else {
         throw new Error(`Unexpected type: ${type}`);
       }

@@ -19,6 +19,8 @@ import { z } from "zod";
 
 import { UsersService, UserPublic } from "../../client";
 import ActionsMenu from "../../components/Common/ActionsMenu";
+import Navbar from "../../components/Common/Navbar";
+import AddEmployee from "../../components/Employees/AddEmployee";
 
 const EmployeesSearchSchema = z.object({
   page: z.number().catch(1),
@@ -128,6 +130,7 @@ function Employees() {
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
         Employee Management
       </Heading>
+      <Navbar type={"Employees"} addModalAs={AddEmployee} />
       <EmployeesTable />
     </Container>
   );

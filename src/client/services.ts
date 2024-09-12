@@ -633,7 +633,7 @@ export class TeamsService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/company/teams/{id}",
+      url: "/api/company/teams/{id}/",
       path: {
         id,
       },
@@ -655,7 +655,7 @@ export class TeamsService {
     const { id, requestBody } = data;
     return __request(OpenAPI, {
       method: "PUT",
-      url: "/api/company/teams/{id}",
+      url: "/api/company/teams/{id}/",
       path: {
         id,
       },
@@ -677,7 +677,7 @@ export class TeamsService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/company/teams/{id}",
+      url: "/api/company/teams/{id}/",
       path: {
         id,
       },
@@ -765,7 +765,7 @@ export class TargetGroupsService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/company/target_groups/{id}",
+      url: "/api/company/target_groups/{id}/",
       path: {
         id,
       },
@@ -787,7 +787,7 @@ export class TargetGroupsService {
     const { id, requestBody } = data;
     return __request(OpenAPI, {
       method: "PUT",
-      url: "/api/company/target_groups/{id}",
+      url: "/api/company/target_groups/{id}/",
       path: {
         id,
       },
@@ -811,7 +811,7 @@ export class TargetGroupsService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "DELETE",
-      url: "/api/company/target_groups/{id}",
+      url: "/api/company/target_groups/{id}/",
       path: {
         id,
       },
@@ -834,7 +834,7 @@ export type TDataReadTask = {
 };
 export type TDataUpdateTask = {
   id: string;
-  requestBody: TaskUserPublic;
+  requestBody: TaskPublic;
 };
 export type TDataDeleteTask = {
   id: string;
@@ -945,7 +945,7 @@ export class TasksService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/harmonise/task/{id}",
+      url: "/api/harmonise/task/{id}/",
       path: {
         id,
       },
@@ -1189,7 +1189,7 @@ export class LeavesService {
     const { id } = data;
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/company/leave/{id}",
+      url: "/api/company/leave/{id}/",
       path: {
         id,
       },
