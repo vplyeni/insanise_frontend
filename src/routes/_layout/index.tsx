@@ -1,33 +1,15 @@
-import {
-  Box,
-  Container,
-  Flex,
-  SimpleGrid,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Container, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { LineChart, Line, PieChart, Pie, Tooltip, Cell } from "recharts"; // Import the necessary components
+import { PieChart, Pie, Tooltip, Cell } from "recharts"; // Import the necessary components
 
 import useAuth from "../../hooks/useAuth";
 import { UsersService } from "../../client";
-import React, { useEffect } from "react";
-import { set } from "react-hook-form";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_layout/")({
   component: Dashboard,
 });
-
-const fetchTaskCount = async () => {
-  const data = await UsersService.readTaskData();
-  return data;
-};
-
-const fetchLeaveDays = async () => {
-  const data = await UsersService.readLeaveData();
-  return data;
-};
 
 function Dashboard() {
   const { user: currentUser } = useAuth();
@@ -53,58 +35,6 @@ function Dashboard() {
 
   const TASK_COLORS = ["#FFBB28", "#00C49F", "#0088FE", "#FF8042"];
 
-  const data01 = [
-    {
-      name: "Group A",
-      value: 400,
-    },
-    {
-      name: "Group B",
-      value: 300,
-    },
-    {
-      name: "Group C",
-      value: 300,
-    },
-    {
-      name: "Group D",
-      value: 200,
-    },
-    {
-      name: "Group E",
-      value: 278,
-    },
-    {
-      name: "Group F",
-      value: 189,
-    },
-  ];
-  const data02 = [
-    {
-      name: "Group A",
-      value: 2400,
-    },
-    {
-      name: "Group B",
-      value: 4567,
-    },
-    {
-      name: "Group C",
-      value: 1398,
-    },
-    {
-      name: "Group D",
-      value: 9800,
-    },
-    {
-      name: "Group E",
-      value: 3908,
-    },
-    {
-      name: "Group F",
-      value: 4800,
-    },
-  ];
   return (
     <>
       <Container maxW="full">

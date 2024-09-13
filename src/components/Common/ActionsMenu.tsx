@@ -33,6 +33,7 @@ import { Target } from "framer-motion";
 import EditTargetGroup from "../TargetGroups/EditTargetGroup";
 import EditTeam from "../Teams/EditTeam";
 import EditEmployee from "../Employees/EditEmployee";
+import ShowTaskResult from "../TaskResults/ShowTaskResult";
 
 interface ActionsMenuProps {
   type: string;
@@ -115,6 +116,13 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
         {type === "Employee" && (
           <EditEmployee
             item={value as UserPublic}
+            isOpen={editUserModal.isOpen}
+            onClose={editUserModal.onClose}
+          />
+        )}
+        {type === "TaskResults" && (
+          <ShowTaskResult
+            item={value as TaskUserPublic}
             isOpen={editUserModal.isOpen}
             onClose={editUserModal.onClose}
           />
