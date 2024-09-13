@@ -40,6 +40,7 @@ const EditMyLeave = ({ item, isOpen, onClose }: EditMyLeaveProps) => {
     new Date(item.end_date),
   ]);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [reason, setReason] = useState<string>(item.description);
 
   const reset = () => {
@@ -57,10 +58,12 @@ const EditMyLeave = ({ item, isOpen, onClose }: EditMyLeaveProps) => {
       LeavesService.updateLeave({ requestBody: data, id: item.id + "" }),
     onSuccess: () => {
       showToast("Success!", "Leave updated successfully.", "success");
+      setIsLoading(false);
       onClose();
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
+      setIsLoading(false);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["my_leaves"] });
@@ -143,6 +146,7 @@ const EditMyLeave = ({ item, isOpen, onClose }: EditMyLeaveProps) => {
           <ModalFooter gap={3}>
             <Button
               variant="primary"
+              isLoading={isLoading}
               onClick={() => {
                 if (selectedDates.length !== 2) {
                   showToast(
@@ -174,6 +178,7 @@ const EditMyLeave = ({ item, isOpen, onClose }: EditMyLeaveProps) => {
                   end_date: endDate,
                   description: reason,
                 };
+                setIsLoading(true);
 
                 mutation.mutate(leave);
               }}

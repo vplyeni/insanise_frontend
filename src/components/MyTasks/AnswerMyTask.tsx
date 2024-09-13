@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { set, type SubmitHandler, useForm } from "react-hook-form";
 import FieldAnswer from "./FieldAnswer";
 import {
   type ApiError,
@@ -31,6 +31,7 @@ interface AnswerMyTaskProps {
 const AnswerMyTask = ({ item, isOpen, onClose }: AnswerMyTaskProps) => {
   const [textareas, setTextareas] = useState({});
   const [completeText, setCompleteText] = useState("Complete");
+  const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const {
@@ -64,9 +65,11 @@ const AnswerMyTask = ({ item, isOpen, onClose }: AnswerMyTaskProps) => {
       TasksService.completeTaskByTaskId({ task_id: data.task_id }),
     onSuccess: () => {
       showToast("Success!", "Task updated successfully.", "success");
+      setIsLoading(false);
       onClose();
     },
     onError: (err: ApiError) => {
+      setIsLoading(false);
       handleError(err, showToast);
     },
     onSettled: () => {
@@ -75,6 +78,7 @@ const AnswerMyTask = ({ item, isOpen, onClose }: AnswerMyTaskProps) => {
   });
 
   const onSubmit: SubmitHandler<TaskUserPublic> = async (data) => {
+    setIsLoading(true);
     mutation.mutate(data);
   };
 
@@ -136,6 +140,7 @@ const AnswerMyTask = ({ item, isOpen, onClose }: AnswerMyTaskProps) => {
               variant="primary"
               onClick={() => {
                 console.log(item.fields);
+                setIsLoading(true);
                 complete.mutate(item);
               }}
               isLoading={isSubmitting}

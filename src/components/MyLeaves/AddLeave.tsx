@@ -33,6 +33,7 @@ interface AddLeaveProps {
 const AddLeaveModal = ({ isOpen, onClose }: AddLeaveProps) => {
   const showToast = useCustomToast();
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState<Date[]>([
     new Date(),
     new Date(),
@@ -55,9 +56,11 @@ const AddLeaveModal = ({ isOpen, onClose }: AddLeaveProps) => {
       LeavesService.createLeave({ requestBody: data }),
     onSuccess: () => {
       showToast("Success!", "Leave added successfully.", "success");
+      setIsLoading(false);
       onClose();
     },
     onError: (err: ApiError) => {
+      setIsLoading(false);
       handleError(err, showToast);
     },
     onSettled: () => {
@@ -140,6 +143,7 @@ const AddLeaveModal = ({ isOpen, onClose }: AddLeaveProps) => {
           </ModalBody>
           <ModalFooter gap={3}>
             <Button
+              isLoading={isLoading}
               variant="primary"
               onClick={() => {
                 if (selectedDates.length !== 2) {
@@ -171,6 +175,7 @@ const AddLeaveModal = ({ isOpen, onClose }: AddLeaveProps) => {
                   end_date: endDate,
                   description: reason,
                 };
+                setIsLoading(true);
 
                 mutation.mutate(leave);
               }}

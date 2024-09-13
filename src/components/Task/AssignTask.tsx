@@ -27,6 +27,7 @@ import {
   UserPublic,
 } from "../../client";
 import { handleError } from "../../utils";
+import { set } from "react-hook-form";
 
 interface AssignTaskProps {
   item: TaskPublic;
@@ -51,8 +52,10 @@ const AssignTask = ({ item, isOpen, onClose }: AssignTaskProps) => {
     mutationFn: (data: TDataAssignTask) => TasksService.assignTask(data),
     onError: (err: ApiError) => {
       showToast("Error", err.body + "", "error");
+      setIsLoading(false);
     },
     onSuccess: (e: any) => {
+      setIsLoading(false);
       showToast("Success", "Task Assigned Succesfully", "success");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       onClose();
@@ -71,28 +74,10 @@ const AssignTask = ({ item, isOpen, onClose }: AssignTaskProps) => {
           <ModalHeader>Assign This Task</ModalHeader>
           <ModalCloseButton />
           <ModalBody minH="300px" pb={6}>
-            <Tabs>
-              <TabList>
-                <Tab>Employee</Tab>
-                <Tab>Team</Tab>
-                <Tab>Group</Tab>
-              </TabList>
-
-              <TabPanels>
-                <TabPanel>
-                  <AssignByEmployee
-                    selectedUsers={selectedUsers}
-                    setSelectedUsers={setSelectedUsers}
-                  />
-                </TabPanel>
-                <TabPanel>
-                  <p>two!</p>
-                </TabPanel>
-                <TabPanel>
-                  <p>three!</p>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+            <AssignByEmployee
+              selectedUsers={selectedUsers}
+              setSelectedUsers={setSelectedUsers}
+            />
           </ModalBody>
           <ModalFooter gap={3}>
             <Button
@@ -110,7 +95,9 @@ const AssignTask = ({ item, isOpen, onClose }: AssignTaskProps) => {
               onMouseLeave={() => {
                 setAssignText("Assign");
               }}
+              isLoading={isLoading}
               onClick={() => {
+                setIsLoading(true);
                 task_assingment_mutation.mutate({
                   assigned_to: selectedUsers.map((i) => i.id),
                   task_id: item.id,
