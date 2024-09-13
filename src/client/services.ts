@@ -403,6 +403,19 @@ export class UsersService {
       },
     });
   }
+
+  public static readLeaveData(): CancelablePromise<Message> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/company/employees/leave_days/",
+    });
+  }
+  public static readTaskData(): CancelablePromise<Message> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/company/employees/task_count/",
+    });
+  }
 }
 
 export type TDataTestEmail = {
