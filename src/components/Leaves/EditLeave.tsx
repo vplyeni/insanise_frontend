@@ -35,6 +35,7 @@ interface EditLeaveProps {
 const EditLeave = ({ item, isOpen, onClose }: EditLeaveProps) => {
   const showToast = useCustomToast();
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState<Date[]>([
     new Date(item.start_date),
     new Date(item.end_date),
@@ -44,6 +45,7 @@ const EditLeave = ({ item, isOpen, onClose }: EditLeaveProps) => {
 
   const reset = () => {
     setSelectedDates([new Date(), new Date()]);
+    setIsLoading(false);
     setReason("");
   };
 
@@ -57,10 +59,12 @@ const EditLeave = ({ item, isOpen, onClose }: EditLeaveProps) => {
       LeavesService.updateLeave({ requestBody: data, id: item.id + "" }),
     onSuccess: () => {
       showToast("Success!", "Leave offered successfully.", "success");
+      setIsLoading(false);
       onClose();
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
+      setIsLoading(false);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["leaves"] });
@@ -175,7 +179,7 @@ const EditLeave = ({ item, isOpen, onClose }: EditLeaveProps) => {
                   end_date: endDate,
                   description: reason,
                 };
-
+                setIsLoading(true);
                 mutation.mutate(leave);
               }}
             >
