@@ -243,6 +243,40 @@ const FieldAnswer = ({
                   width={"40px"}
                   icon={<FiDownload />}
                   aria-label={""}
+                  onClick={() => {
+                    TasksService.downloadFile({
+                      task_id: task_id,
+                      field_id: field.id,
+                    })
+                      .then((res: any) => {
+                        const url = window.URL.createObjectURL(
+                          new Blob([res.data])
+                        );
+                        const link = document.createElement("a");
+
+                        // Extract the original filename without extension
+                        const baseFileName = field.represented_name;
+
+                        // Get the extension from the field.content or set a default if not available
+                        const fileExtension =
+                          field.content.split(".").pop() || "pdf"; // Default to 'pdf' if no extension found
+
+                        // Construct the filename with the correct extension
+                        const filenameWithExtension = `${baseFileName}.${fileExtension}`;
+
+                        link.href = url;
+                        link.setAttribute("download", filenameWithExtension);
+                        document.body.appendChild(link);
+                        link.click();
+
+                        // Clean up
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                      })
+                      .catch((err: ApiError) => {
+                        console.log(err);
+                      });
+                  }}
                 />
               </>
             )}

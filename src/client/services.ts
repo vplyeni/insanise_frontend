@@ -1040,6 +1040,24 @@ export class TasksService {
     });
   }
 
+  public static downloadFile(data: {
+    task_id: string;
+    field_id: string;
+  }): CancelablePromise<Message> {
+    const { task_id, field_id } = data;
+    return __request(OpenAPI, {
+      method: "GET",
+      url:
+        "/api/harmonise/task_user/download/?task_id=" +
+        task_id +
+        "&field_id=" +
+        field_id,
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
   /**
    * Alter Field
    * Alter an item.
