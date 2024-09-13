@@ -70,9 +70,9 @@ function Dashboard() {
             Hi, {currentUser?.full_name || currentUser?.email} 👋🏼
           </Text>
           <Text>Welcome back, nice to see you again!</Text>
-          <SimpleGrid marginTop={"10px"} columns={4} spacing={10}>
-            <Box bg="#50505020" borderRadius={"10px"} height="170px">
-              <PieChart width={200} height={200}>
+          <SimpleGrid marginTop={"10px"} columns={3} spacing={10}>
+            <Box bg="#50505020" borderRadius={"10px"} height="300px">
+              <PieChart width={350} height={300}>
                 <Pie
                   data={data01}
                   dataKey="value"
@@ -95,9 +95,54 @@ function Dashboard() {
                 />
               </PieChart>
             </Box>
-            <Box bg="#50505020" borderRadius={"10px"} height="170px"></Box>
-            <Box bg="#50505020" borderRadius={"10px"} height="170px"></Box>
-            <Box bg="#50505020" borderRadius={"10px"} height="170px"></Box>
+            <Box bg="#50505020" borderRadius={"10px"} height="300px">
+              <PieChart width={350} height={300}>
+                <Pie
+                  data={data01}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={50}
+                  fill="#8884d8"
+                />
+                <Pie
+                  data={data02}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  fill="#82ca9d"
+                  label
+                />
+              </PieChart>
+            </Box>
+            <Box bg="#50505020" borderRadius={"10px"} height="300px">
+              <PieChart width={350} height={300}>
+                <Pie
+                  data={data01}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={50}
+                  fill="#8884d8"
+                />
+                <Pie
+                  data={data02}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  fill="#82ca9d"
+                  label
+                />
+              </PieChart>
+            </Box>
           </SimpleGrid>
         </Box>
       </Container>

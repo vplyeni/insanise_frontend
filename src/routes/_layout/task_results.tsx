@@ -100,6 +100,7 @@ function TaskResultsTable({ searchString }: TaskResultsProps) {
               <Th>Name</Th>
               <Th>Description</Th>
               <Th>Due Date</Th>
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -129,6 +130,9 @@ function TaskResultsTable({ searchString }: TaskResultsProps) {
                       {TaskResult.description || "N/A"}
                     </Td>
                     <Td>{TaskResult.due_date}</Td>
+                    <Td>
+                      <ActionsMenu type={"TaskResults"} value={TaskResult} />
+                    </Td>
                   </Tr>
                 )
               )}

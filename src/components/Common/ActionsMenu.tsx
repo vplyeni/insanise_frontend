@@ -42,6 +42,7 @@ interface ActionsMenuProps {
     | TaskBase
     | LeavePublic
     | TargetGroupPublic
+    | TaskUserPublic
     | TaskUserPublic;
   disabled?: boolean;
 }
@@ -68,7 +69,13 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             onClick={editUserModal.onOpen}
             icon={<FiEdit fontSize="16px" />}
           >
-            {type == "MyTasks" ? "Answer Your Task" : <>Edit {type}</>}
+            {type == "MyTasks" ? (
+              "Answer Your Task"
+            ) : type == "TaskResults" ? (
+              "View Task Results"
+            ) : (
+              <>Edit {type}</>
+            )}
           </MenuItem>
           {type === "Task" && (
             <MenuItem
@@ -79,7 +86,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
               Assign {type}
             </MenuItem>
           )}
-          {type !== "MyTasks" && (
+          {type !== "MyTasks" && type !== "TaskResults" && (
             <MenuItem
               onClick={deleteModal.onOpen}
               icon={<FiTrash fontSize="16px" />}
